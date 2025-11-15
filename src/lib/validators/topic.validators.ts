@@ -122,6 +122,52 @@ export const UpdateTopicCommandSchema = z
  */
 export type UpdateTopicCommandInput = z.infer<typeof UpdateTopicCommandSchema>;
 
+/**
+ * Validation schema for creating a new topic
+ *
+ * Validates:
+ * - title: Required string (1-200 chars)
+ * - technology: Required string (1-100 chars, alphanumeric + .-_)
+ * - parent_id: Optional UUID or null
+ * - description: Optional string or null (max 1000 chars)
+ * - status: Optional enum (to_do, in_progress, completed), defaults to 'to_do'
+ * - leetcode_links: Optional array of validated link objects (max 5)
+ */
+export const CreateTopicCommandSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(1, { message: "Title must not be empty" })
+    .max(200, { message: "Title must not exceed 200 characters" }),
+  technology: z
+    .string({ required_error: "Technology is required" })
+    .min(1, { message: "Technology must not be empty" })
+    .max(100, { message: "Technology must not exceed 100 characters" })
+    .regex(/^[a-zA-Z0-9\s.\-_]+$/, {
+      message: "Technology must contain only alphanumeric characters, spaces, dots, hyphens, and underscores",
+    }),
+  parent_id: z.string().uuid({ message: "Parent ID must be a valid UUID" }).nullable().optional(),
+  description: z.string().max(1000, { message: "Description must not exceed 1000 characters" }).nullable().optional(),
+  status: z
+    .enum(["to_do", "in_progress", "completed"], {
+      errorMap: () => ({
+        message: "Status must be one of: to_do, in_progress, completed",
+      }),
+    })
+    .default("to_do")
+    .optional(),
+  leetcode_links: z
+    .array(LeetCodeLinkSchema)
+    .max(5, { message: "Maximum 5 LeetCode links per topic" })
+    .default([])
+    .optional(),
+});
+
+/**
+ * Type inference from CreateTopicCommandSchema
+ * Use this type for validated create command data
+ */
+export type CreateTopicCommandInput = z.infer<typeof CreateTopicCommandSchema>;
+
 // Re-export generate topics validators
 export * from "./generate-topics.validator";
 

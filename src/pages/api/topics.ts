@@ -1,106 +1,132 @@
 import type { APIRoute } from "astro";
-import { ListTopicsQuerySchema } from "@/lib/validators/topic.validators";
-import { listUserTopics, TopicServiceError } from "@/lib/services/topic.service";
-import type { ErrorResponseDTO, ValidationErrorDetail } from "@/types";
-import { ZodError } from "zod";
+import { CreateTopicCommandSchema } from "@/lib/validators/topic.validators";
+import { createTopic, TopicServiceError } from "@/lib/services/topic.service";
+import type { ErrorResponseDTO } from "@/types";
 
-/**
- * Disable static pre-rendering for this API endpoint
- * This endpoint requires runtime authentication and database access
- */
 export const prerender = false;
 
 /**
- * GET /api/topics
+ * POST /api/topics
  *
- * Lists all topics for the authenticated user with optional filtering,
- * sorting, and pagination.
+ * Creates a new topic for the authenticated user
+ * Requires authentication via JWT token in Authorization header
  *
- * Query Parameters:
- * - status (optional): Filter by topic status (to_do, in_progress, completed)
- * - technology (optional): Filter by technology name
- * - parent_id (optional): Filter by parent topic ID or "null" for root topics only
- * - sort (optional): Sort field (created_at, updated_at, title, status). Default: created_at
- * - order (optional): Sort order (asc, desc). Default: desc
- * - page (optional): Page number for pagination (min: 1). Default: 1
- * - limit (optional): Items per page (1-100). Default: 50
+ * Request Body:
+ * {
+ *   "parent_id": "uuid or null",       // Optional
+ *   "title": "Topic Title",            // Required
+ *   "description": "Description",      // Optional
+ *   "status": "to_do",                 // Optional, defaults to 'to_do'
+ *   "technology": "React",             // Required
+ *   "leetcode_links": [...]            // Optional, defaults to []
+ * }
  *
- * Response Codes:
- * - 200 OK: Topics retrieved successfully (including empty results)
- * - 400 Bad Request: Invalid query parameters
- * - 401 Unauthorized: Missing or invalid authentication
- * - 500 Internal Server Error: Unexpected error
+ * Response (201 Created):
+ * {
+ *   "id": "uuid",
+ *   "user_id": "uuid",
+ *   "parent_id": null,
+ *   "title": "Topic Title",
+ *   "description": "Description",
+ *   "status": "to_do",
+ *   "technology": "React",
+ *   "leetcode_links": [...],
+ *   "created_at": "...",
+ *   "updated_at": "..."
+ * }
+ *
+ * Error Responses:
+ * - 400 Bad Request: Invalid request body or validation errors
+ * - 401 Unauthorized: Missing or invalid authentication token
+ * - 404 Not Found: Parent topic not found
+ * - 500 Internal Server Error: Database error
  */
-export const GET: APIRoute = async ({ request, locals }) => {
-  try {
-    // Step 1: Authentication check
-    const supabase = locals.supabase;
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      const errorResponse: ErrorResponseDTO = {
-        error: {
-          code: "AUTHENTICATION_ERROR",
-          message: "Missing or invalid authentication token",
-        },
-      };
-      return new Response(JSON.stringify(errorResponse), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // Step 2: Parse query parameters from URL
-    const url = new URL(request.url);
-    const pageParam = url.searchParams.get("page");
-    const limitParam = url.searchParams.get("limit");
-    const rawParams = {
-      status: url.searchParams.get("status") || undefined,
-      technology: url.searchParams.get("technology") || undefined,
-      parent_id: url.searchParams.get("parent_id") || undefined,
-      sort: url.searchParams.get("sort") || undefined,
-      order: url.searchParams.get("order") || undefined,
-      page: pageParam ? Number.parseInt(pageParam, 10) : undefined,
-      limit: limitParam ? Number.parseInt(limitParam, 10) : undefined,
+export const POST: APIRoute = async ({ request, locals }) => {
+  // Step 1: Extract Supabase client from middleware
+  const supabase = locals.supabase;
+  if (!supabase) {
+    const errorResponse: ErrorResponseDTO = {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Supabase client not initialized",
+      },
     };
-
-    // Step 3: Validate query parameters with Zod schema
-    const validatedParams = ListTopicsQuerySchema.parse(rawParams);
-
-    // Step 4: Call service to retrieve topics
-    const response = await listUserTopics(supabase, user.id, validatedParams);
-
-    // Step 5: Return success response
-    return new Response(JSON.stringify(response), {
-      status: 200,
+    return new Response(JSON.stringify(errorResponse), {
+      status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Handle Zod validation errors
-    if (error instanceof ZodError) {
-      const details: ValidationErrorDetail[] = error.errors.map((err) => ({
-        field: err.path.join("."),
-        message: err.message,
-      }));
+  }
 
+  // Step 2: Verify authentication and get user
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    const errorResponse: ErrorResponseDTO = {
+      error: {
+        code: "AUTHENTICATION_ERROR",
+        message: "Missing or invalid authentication token",
+      },
+    };
+    return new Response(JSON.stringify(errorResponse), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const userId = user.id;
+
+  try {
+    // Step 3: Parse and validate request body
+    let requestBody;
+    try {
+      requestBody = await request.json();
+    } catch {
       const errorResponse: ErrorResponseDTO = {
         error: {
           code: "VALIDATION_ERROR",
-          message: "Invalid query parameters",
-          details,
+          message: "Invalid JSON in request body",
         },
       };
-
       return new Response(JSON.stringify(errorResponse), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Handle service errors (500 Internal Error)
+    const bodyValidation = CreateTopicCommandSchema.safeParse(requestBody);
+
+    if (!bodyValidation.success) {
+      const errorResponse: ErrorResponseDTO = {
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Invalid request body",
+          details: bodyValidation.error.issues.map((issue) => ({
+            field: issue.path.join(".") || "body",
+            message: issue.message,
+          })),
+        },
+      };
+      return new Response(JSON.stringify(errorResponse), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const createCommand = bodyValidation.data;
+
+    // Step 4: Create topic via service
+    const createdTopic = await createTopic(supabase, userId, createCommand);
+
+    // Step 5: Return success response
+    return new Response(JSON.stringify(createdTopic), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    // Handle service errors
     if (error instanceof TopicServiceError) {
       return new Response(JSON.stringify(error.errorResponse), {
         status: error.statusCode,
@@ -110,7 +136,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
     // Handle unexpected errors
     // eslint-disable-next-line no-console
-    console.error("[API] Unexpected error in GET /api/topics", {
+    console.error("[API] Unexpected error in POST /api/topics", {
+      userId,
       error: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString(),
@@ -122,7 +149,6 @@ export const GET: APIRoute = async ({ request, locals }) => {
         message: "An unexpected error occurred",
       },
     };
-
     return new Response(JSON.stringify(errorResponse), {
       status: 500,
       headers: { "Content-Type": "application/json" },

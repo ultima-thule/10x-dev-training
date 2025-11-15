@@ -7,6 +7,7 @@ import type {
   GenerateTopicsResponseDTO,
   TopicDTO,
   UpdateTopicCommand,
+  CreateTopicCommand,
 } from "@/types";
 import type { Json } from "@/db/database.types";
 import type { ListTopicsQueryInput, GenerateTopicsInput } from "@/lib/validators/topic.validators";
@@ -551,6 +552,118 @@ export async function updateTopic(
     console.error("[TopicService] Unexpected error in updateTopic", {
       userId,
       topicId,
+      error: error instanceof Error ? error.message : "Unknown error",
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new TopicServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "An unexpected error occurred",
+      },
+    });
+  }
+}
+
+/**
+ * Creates a new topic for the authenticated user
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID
+ * @param command - Create command with topic data
+ * @returns Promise resolving to created topic
+ * @throws TopicServiceError with 404 if parent not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Validate parent topic if parent_id provided
+ * 2. Prepare insert data with user_id and defaults
+ * 3. Execute insert query with select to return created topic
+ * 4. Transform and return created topic
+ *
+ * Error Scenarios:
+ * - 404 Not Found: Parent topic doesn't exist or belongs to another user
+ * - 500 Internal Error: Database operation failed
+ */
+export async function createTopic(
+  supabase: SupabaseClient,
+  userId: string,
+  command: CreateTopicCommand
+): Promise<TopicDTO> {
+  try {
+    // Step 1: Validate parent topic if provided
+    if (command.parent_id) {
+      await validateParentTopic(supabase, userId, command.parent_id);
+    }
+
+    // Step 2: Prepare insert data
+    const insertData = {
+      user_id: userId,
+      parent_id: command.parent_id || null,
+      title: command.title,
+      description: command.description || null,
+      status: command.status || "to_do",
+      technology: command.technology,
+      leetcode_links: (command.leetcode_links || []) as unknown as Json,
+    };
+
+    // Step 3: Execute insert query
+    const { data: createdTopic, error } = await supabase.from("topics").insert(insertData).select().single();
+
+    // Step 4: Handle database errors
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("[TopicService] Failed to create topic", {
+        userId,
+        title: command.title,
+        technology: command.technology,
+        hasParent: !!command.parent_id,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to create topic",
+        },
+      });
+    }
+
+    // Step 5: Handle unexpected null result
+    if (!createdTopic) {
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to create topic",
+        },
+      });
+    }
+
+    // Step 6: Transform to TopicDTO
+    return {
+      id: createdTopic.id,
+      user_id: createdTopic.user_id,
+      parent_id: createdTopic.parent_id,
+      title: createdTopic.title,
+      description: createdTopic.description,
+      status: createdTopic.status,
+      technology: createdTopic.technology,
+      leetcode_links: (createdTopic.leetcode_links as unknown as LeetCodeLink[]) || [],
+      created_at: createdTopic.created_at,
+      updated_at: createdTopic.updated_at,
+    };
+  } catch (error) {
+    // Re-throw TopicServiceError as-is
+    if (error instanceof TopicServiceError) {
+      throw error;
+    }
+
+    // Log and wrap unexpected errors
+    // eslint-disable-next-line no-console
+    console.error("[TopicService] Unexpected error in createTopic", {
+      userId,
+      title: command.title,
+      technology: command.technology,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     });
