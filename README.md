@@ -185,6 +185,14 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 - RLS-enforced user isolation
 - UUID validation
 
+✅ **API - Update Topic**: PATCH `/api/topics/:id` to update existing topics
+
+- Partial updates (all fields optional, at least one required)
+- User ownership verification
+- Support for updating: title, description, status, technology, leetcode_links
+- Comprehensive input validation with field-level error messages
+- Privacy-focused error responses (404 for unauthorized access)
+
 ✅ **AI Topic Generation**: POST `/api/topics/generate` with OpenRouter.ai integration
 
 - Personalized topic generation based on user profile
@@ -196,7 +204,7 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 
 ⏳ Supabase authentication (sign up, login, logout)
 ⏳ User profile management
-⏳ Topic CRUD operations (create, update, delete)
+⏳ Topic CRUD operations (create, delete)
 ⏳ Dashboard with progress visualization
 ⏳ Activity streak tracking
 
