@@ -1,4 +1,5 @@
 # Product Requirements Document (PRD)
+
 # Development Refresher Training Application
 
 **Version:** 1.0  
@@ -10,12 +11,15 @@
 ## 1. Executive Summary
 
 ### 1.1 Product Vision
+
 A web application that helps senior developers with 10+ year career gaps systematically refresh their programming skills through AI-generated learning topics and algorithm practice integration.
 
 ### 1.2 Product Name
+
 Development Refresher Training
 
 ### 1.3 Target Launch
+
 8-12 week development cycle with beta launch targeting 20-30 users for validation
 
 ---
@@ -23,6 +27,7 @@ Development Refresher Training
 ## 2. Problem Statement
 
 Senior developers who have been away from professional programming for 10+ years want to return to development roles but need structured guidance to:
+
 - Identify knowledge gaps in modern programming practices
 - Plan a systematic skills refresh strategy
 - Track progress through their learning journey
@@ -35,8 +40,10 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 ## 3. Target Audience
 
 ### 3.1 Primary User Persona
+
 **Name:** Senior Developer Returner  
 **Background:**
+
 - 10+ years of professional development experience
 - Career gap of 10+ years from programming
 - Last worked with C++ and/or Python professionally
@@ -44,6 +51,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 - Self-motivated and comfortable with technical learning
 
 **Needs:**
+
 - Structured learning path for modern C++ (C++17/20/23) and Python 3
 - Algorithm practice for technical interviews
 - Progress tracking to stay motivated
@@ -54,19 +62,22 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 ## 4. Goals and Success Criteria
 
 ### 4.1 Business Goals
+
 - Validate product-market fit with 20-30 beta users
 - Establish baseline for freemium monetization model
 - Build foundation for scalable SaaS product
 
 ### 4.2 Success Metrics
-| Metric | Target | Measurement Period |
-|--------|--------|-------------------|
+
+| Metric                        | Target                                 | Measurement Period  |
+| ----------------------------- | -------------------------------------- | ------------------- |
 | Monthly topic generation rate | 75% of users generate topics ≥1x/month | 60 days post-launch |
-| Progress update engagement | 90% of users update topic status | 60 days post-launch |
-| User retention | 60% return after 30 days | 60 days post-launch |
-| Topic completion rate | 40% of started topics completed | 60 days post-launch |
+| Progress update engagement    | 90% of users update topic status       | 60 days post-launch |
+| User retention                | 60% return after 30 days               | 60 days post-launch |
+| Topic completion rate         | 40% of started topics completed        | 60 days post-launch |
 
 ### 4.3 User Goals
+
 - Generate personalized learning topics based on C++ or Python
 - Track learning progress from "not started" to "completed"
 - Access curated algorithm problems for interview preparation
@@ -79,6 +90,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 ### 5.1 Core Features (Must Have)
 
 #### 5.1.1 User Authentication
+
 - Email/password registration and login
 - GitHub OAuth integration
 - Password reset functionality
@@ -86,6 +98,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 - Secure session management via Supabase Auth
 
 #### 5.1.2 AI-Powered Topic Generation
+
 - Generate 5 topics per request using Anthropic Claude
 - Technology selection: C++ and/or Python
 - Optional context input (max 500 characters)
@@ -93,6 +106,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 - Regeneration capability with daily limits
 
 #### 5.1.3 Topic Management (CRUD)
+
 - Create: AI-generated or manual creation
 - Read: View all topics with filtering and search
 - Update: Edit topic details (title, description, estimated hours, difficulty)
@@ -100,6 +114,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 - Delete: Remove topics with confirmation dialog
 
 #### 5.1.4 Topic Display and Organization
+
 - Dashboard with overview statistics
 - "In Progress" topics section
 - "Suggested Next Steps" section
@@ -107,12 +122,14 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 - Technology badges (C++/Python) on each topic
 
 #### 5.1.5 LeetCode Integration
+
 - Display 3-5 algorithm problems per topic
 - Link directly to leetcode.com
 - Show problem difficulty badges
 - Focus on general algorithms, not language-specific
 
 #### 5.1.6 Progress Tracking
+
 - Three statuses: Not Started, In Progress, Completed
 - Status change timestamps
 - Completion statistics on dashboard
@@ -121,12 +138,14 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 ### 5.2 Secondary Features (Should Have)
 
 #### 5.2.1 Filtering and Search
+
 - Filter by technology (All/C++/Python)
 - Filter by status (All/Not Started/In Progress/Completed)
 - Text search by title and description
 - Sort options: Recently Added, Recently Updated, Alphabetical, Estimated Hours
 
 #### 5.2.2 Account Management
+
 - View/edit profile information
 - Delete account and all data
 - Manage subscription status (free/premium)
@@ -136,6 +155,7 @@ Current solutions lack personalized, AI-driven topic generation that considers b
 ## 6. Out of Scope for MVP
 
 The following features are explicitly excluded from the MVP:
+
 - Sharing topics between user accounts
 - LeetCode progress synchronization
 - Email reminders or notifications
@@ -157,6 +177,7 @@ The following features are explicitly excluded from the MVP:
 ### 7.1 Technology Stack
 
 **Frontend:**
+
 - Astro 5 (SSR enabled)
 - React 19 (for dynamic components)
 - TypeScript 5
@@ -164,11 +185,13 @@ The following features are explicitly excluded from the MVP:
 - Shadcn/ui components
 
 **Backend:**
+
 - Astro API routes (`/src/pages/api`)
 - Supabase for database and authentication
 - PostgreSQL (via Supabase)
 
 **Third-Party Services:**
+
 - Anthropic Claude 3.5 Sonnet (AI topic generation)
 - LeetCode public API (problem data)
 - Supabase Auth (authentication)
@@ -176,6 +199,7 @@ The following features are explicitly excluded from the MVP:
 - Supabase Edge Functions (API key security)
 
 **Deployment:**
+
 - Vercel (frontend/API hosting, free tier)
 - Supabase Cloud (free tier: 50MB database, 2GB bandwidth)
 
@@ -214,13 +238,13 @@ The following features are explicitly excluded from the MVP:
 
 ### 7.3 Key Technical Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| AI Provider | Anthropic Claude 3.5 Sonnet | High-quality output, reasonable pricing, good developer docs |
-| Authentication | Supabase Auth | Integrated with database, supports OAuth, handles security |
-| Database | PostgreSQL (Supabase) | Reliable, supports RLS, free tier sufficient for MVP |
-| Hosting | Vercel | Excellent Astro support, automatic deployments, free tier |
-| API Key Security | Supabase Edge Functions | Prevents API key exposure to frontend |
+| Decision         | Choice                      | Rationale                                                    |
+| ---------------- | --------------------------- | ------------------------------------------------------------ |
+| AI Provider      | Anthropic Claude 3.5 Sonnet | High-quality output, reasonable pricing, good developer docs |
+| Authentication   | Supabase Auth               | Integrated with database, supports OAuth, handles security   |
+| Database         | PostgreSQL (Supabase)       | Reliable, supports RLS, free tier sufficient for MVP         |
+| Hosting          | Vercel                      | Excellent Astro support, automatic deployments, free tier    |
+| API Key Security | Supabase Edge Functions     | Prevents API key exposure to frontend                        |
 
 ---
 
@@ -473,6 +497,7 @@ The following features are explicitly excluded from the MVP:
 ### 11.1 Database Schema
 
 #### Users Table (managed by Supabase Auth)
+
 ```sql
 -- Managed by Supabase Auth
 users (
@@ -485,6 +510,7 @@ users (
 ```
 
 #### User Profiles Table
+
 ```sql
 CREATE TABLE user_profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -509,6 +535,7 @@ CREATE POLICY "Users can update own profile"
 ```
 
 #### Review Topics Table
+
 ```sql
 CREATE TABLE review_topics (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -553,6 +580,7 @@ CREATE POLICY "Users can delete own topics"
 ```
 
 #### Analytics Events Table
+
 ```sql
 CREATE TABLE analytics_events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -579,18 +607,18 @@ CREATE POLICY "Users can view own events"
 ```typescript
 // src/types.ts
 
-export type Technology = 'cpp' | 'python';
+export type Technology = "cpp" | "python";
 
-export type TopicStatus = 'not_started' | 'in_progress' | 'completed';
+export type TopicStatus = "not_started" | "in_progress" | "completed";
 
-export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
+export type DifficultyLevel = "beginner" | "intermediate" | "advanced";
 
-export type SubscriptionTier = 'free' | 'premium';
+export type SubscriptionTier = "free" | "premium";
 
 export interface LeetCodeProblem {
   url: string;
   title: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: "Easy" | "Medium" | "Hard";
 }
 
 export interface ReviewTopic {
@@ -623,7 +651,7 @@ export interface UserProfile {
 export interface AnalyticsEvent {
   id: string;
   user_id: string;
-  event_type: 'generate_topics' | 'update_status' | 'create_topic' | 'delete_topic';
+  event_type: "generate_topics" | "update_status" | "create_topic" | "delete_topic";
   event_metadata: Record<string, any>;
   created_at: string;
 }
@@ -636,7 +664,7 @@ export interface GenerateTopicsRequest {
 }
 
 export interface GenerateTopicsResponse {
-  topics: Omit<ReviewTopic, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'completed_at'>[];
+  topics: Omit<ReviewTopic, "id" | "user_id" | "created_at" | "updated_at" | "completed_at">[];
   remaining_generations: number;
 }
 
@@ -669,6 +697,7 @@ export interface UpdateTopicRequest {
 ### 12.1 Authentication Endpoints
 
 All authentication handled by Supabase Auth:
+
 - `POST /auth/signup` - Create account
 - `POST /auth/login` - Email/password login
 - `POST /auth/oauth/github` - GitHub OAuth
@@ -678,6 +707,7 @@ All authentication handled by Supabase Auth:
 ### 12.2 Topic Generation Endpoints
 
 #### Generate Topics
+
 ```
 POST /api/topics/generate
 
@@ -719,6 +749,7 @@ Response 500:
 ### 12.3 Topic CRUD Endpoints
 
 #### Get All Topics
+
 ```
 GET /api/topics
 
@@ -729,6 +760,7 @@ Response 200:
 ```
 
 #### Get Single Topic
+
 ```
 GET /api/topics/:id
 
@@ -744,6 +776,7 @@ Response 404:
 ```
 
 #### Create Topic (Manual)
+
 ```
 POST /api/topics
 
@@ -764,6 +797,7 @@ Response 201:
 ```
 
 #### Update Topic
+
 ```
 PATCH /api/topics/:id
 
@@ -783,6 +817,7 @@ Response 200:
 ```
 
 #### Update Topic Status
+
 ```
 PATCH /api/topics/:id/status
 
@@ -798,6 +833,7 @@ Response 200:
 ```
 
 #### Delete Topic
+
 ```
 DELETE /api/topics/:id
 
@@ -808,6 +844,7 @@ No content
 ### 12.4 User Profile Endpoints
 
 #### Get User Profile
+
 ```
 GET /api/profile
 
@@ -818,6 +855,7 @@ Response 200:
 ```
 
 #### Update User Profile
+
 ```
 PATCH /api/profile
 
@@ -834,6 +872,7 @@ Response 200:
 ```
 
 #### Delete Account
+
 ```
 DELETE /api/profile
 
@@ -844,6 +883,7 @@ No content
 ### 12.5 Analytics Endpoints
 
 #### Get Dashboard Stats
+
 ```
 GET /api/analytics/dashboard
 
@@ -867,6 +907,7 @@ Response 200:
 ### 13.1 Design System
 
 #### Color Palette
+
 ```
 Primary (Navy/Blue):
 - primary-50: #eff6ff
@@ -891,17 +932,20 @@ Neutral:
 ```
 
 #### Typography
+
 - **Headings:** SF Pro / Inter (sans-serif)
 - **Body:** SF Pro / Inter (sans-serif)
 - **Code:** JetBrains Mono / Fira Code (monospace)
 
 #### Spacing
+
 - Use Tailwind's default spacing scale (4px base unit)
 - Card padding: 6 (24px)
 - Section spacing: 8 (32px)
 - Button padding: px-4 py-2
 
 #### Border Radius
+
 - Small: rounded-md (6px)
 - Medium: rounded-lg (8px)
 - Large: rounded-xl (12px)
@@ -909,6 +953,7 @@ Neutral:
 ### 13.2 Page Layouts
 
 #### Landing Page (Public)
+
 ```
 ┌─────────────────────────────────────────┐
 │  [Logo]  Features  Pricing  [Login]     │
@@ -928,6 +973,7 @@ Neutral:
 ```
 
 #### Dashboard (Authenticated)
+
 ```
 ┌─────────────────────────────────────────┐
 │  [Logo]  Dashboard  Topics  Account  [👤]│
@@ -956,6 +1002,7 @@ Neutral:
 ```
 
 #### All Topics Page (Authenticated)
+
 ```
 ┌─────────────────────────────────────────┐
 │  [Logo]  Dashboard  Topics  Account  [👤]│
@@ -984,12 +1031,14 @@ Neutral:
 ### 13.3 Component Specifications
 
 #### Topic Card Component
+
 - Display: title, technology badge, difficulty, estimated hours, description (truncated)
 - Actions: status dropdown, edit button, delete button
 - Expandable section: LeetCode problems list
 - Visual status indicator (color-coded border/badge)
 
 #### Generate Topics Modal
+
 - Technology selector (dropdown)
 - Optional context textarea (500 char limit with counter)
 - "Consider completed topics" checkbox (default: true)
@@ -997,12 +1046,14 @@ Neutral:
 - Generate button (disabled if limit reached)
 
 #### Topic Edit Modal
+
 - Editable fields: title, description, estimated_hours, difficulty_level
 - LeetCode problems list (add/remove)
 - Save/Cancel buttons
 - Validation messages
 
 #### Status Dropdown
+
 - Three options: Not Started, In Progress, Completed
 - Color-coded icons
 - Updates immediately on selection
@@ -1011,6 +1062,7 @@ Neutral:
 ### 13.4 Responsive Behavior
 
 #### Mobile (<640px)
+
 - Single column layout
 - Collapsible navigation menu (hamburger)
 - Stacked topic cards
@@ -1018,11 +1070,13 @@ Neutral:
 - Bottom sheet modals
 
 #### Tablet (640-1024px)
+
 - Two column layout for topic cards
 - Visible navigation bar
 - Side drawer modals
 
 #### Desktop (>1024px)
+
 - Three column layout for topic cards
 - Full navigation bar
 - Centered modals (max-width)
@@ -1031,22 +1085,26 @@ Neutral:
 ### 13.5 Interaction Patterns
 
 #### Loading States
+
 - Skeleton loaders for topic cards
 - Spinner for topic generation (with timeout warning at 20s)
 - Inline spinners for status updates
 
 #### Empty States
+
 - Dashboard with no topics: "Get started by generating your first topics"
 - No in-progress topics: "Start learning by marking a topic as in progress"
 - No completed topics: "You haven't completed any topics yet"
 - Filtered view with no results: "No topics match your filters"
 
 #### Error States
+
 - API failure: Red banner with retry button
 - Validation errors: Inline red text below field
 - Network timeout: Friendly message with support contact
 
 #### Success States
+
 - Topic created/updated: Green toast notification (3s auto-dismiss)
 - Status changed: Smooth transition animation
 - Account deleted: Redirect to landing page with confirmation
@@ -1066,15 +1124,18 @@ Neutral:
 ### 14.2 Cost Estimation
 
 **Pricing:**
+
 - Input: ~$3 per 1M tokens
 - Output: ~$15 per 1M tokens
 
 **Per Generation:**
+
 - Input: ~2,000 tokens (prompt + user history)
 - Output: ~1,000 tokens (5 topics with details)
 - Cost per generation: ~$0.02
 
 **Monthly Budget:**
+
 - 5,000 generations/month = ~$100/month
 - Free tier: 10 generations/user/month × 30 users = 300 generations = ~$6
 - Premium tier buffer: $94 for growth
@@ -1082,12 +1143,14 @@ Neutral:
 ### 14.3 Rate Limiting Strategy
 
 **Application Level:**
+
 - Free tier: 5 generations per day, 10 per month
 - Premium tier: 20 generations per day, unlimited monthly
 - Track in `user_profiles.generation_count_current_month`
 - Reset monthly on `generation_count_reset_date`
 
 **API Level:**
+
 - Anthropic limit: 50 requests/minute (default)
 - Implement exponential backoff for rate limit errors
 - Queue requests if necessary (simple FIFO)
@@ -1095,6 +1158,7 @@ Neutral:
 ### 14.4 Prompt Engineering
 
 #### System Prompt Template
+
 ```
 You are an expert technical educator helping senior software developers refresh their skills after a 10+ year career break. Your role is to generate personalized learning topics that bridge the gap between their historical knowledge and modern practices.
 
@@ -1132,6 +1196,7 @@ Format your response as a valid JSON array matching this structure:
 ```
 
 #### User Prompt Template
+
 ```
 Technology: {TECHNOLOGY} (C++ or Python)
 
@@ -1147,6 +1212,7 @@ Generate 5 new learning topics that complement the user's history and address th
 ```
 
 #### Example C++ Generation
+
 ```
 Technology: C++
 
@@ -1161,6 +1227,7 @@ User's Additional Context:
 ```
 
 #### Example Python Generation
+
 ```
 Technology: Python
 
@@ -1180,7 +1247,7 @@ User's Additional Context:
 interface AIGeneratedTopic {
   title: string;
   description: string;
-  difficulty_level: 'beginner' | 'intermediate' | 'advanced';
+  difficulty_level: "beginner" | "intermediate" | "advanced";
   estimated_hours: number;
   leetcode_problems: LeetCodeProblem[];
 }
@@ -1188,28 +1255,28 @@ interface AIGeneratedTopic {
 function validateAIResponse(response: any): AIGeneratedTopic[] {
   // Validate response is array of 5 topics
   if (!Array.isArray(response) || response.length !== 5) {
-    throw new Error('Invalid AI response: expected 5 topics');
+    throw new Error("Invalid AI response: expected 5 topics");
   }
-  
+
   // Validate each topic structure
   response.forEach((topic, index) => {
-    if (!topic.title || typeof topic.title !== 'string') {
+    if (!topic.title || typeof topic.title !== "string") {
       throw new Error(`Topic ${index}: missing or invalid title`);
     }
-    if (!topic.description || typeof topic.description !== 'string') {
+    if (!topic.description || typeof topic.description !== "string") {
       throw new Error(`Topic ${index}: missing or invalid description`);
     }
-    if (!['beginner', 'intermediate', 'advanced'].includes(topic.difficulty_level)) {
+    if (!["beginner", "intermediate", "advanced"].includes(topic.difficulty_level)) {
       throw new Error(`Topic ${index}: invalid difficulty_level`);
     }
-    if (typeof topic.estimated_hours !== 'number' || topic.estimated_hours < 2 || topic.estimated_hours > 8) {
+    if (typeof topic.estimated_hours !== "number" || topic.estimated_hours < 2 || topic.estimated_hours > 8) {
       throw new Error(`Topic ${index}: estimated_hours must be 2-8`);
     }
     if (!Array.isArray(topic.leetcode_problems) || topic.leetcode_problems.length < 3) {
       throw new Error(`Topic ${index}: must have 3-5 LeetCode problems`);
     }
   });
-  
+
   return response;
 }
 ```
@@ -1217,6 +1284,7 @@ function validateAIResponse(response: any): AIGeneratedTopic[] {
 ### 14.6 Error Handling
 
 **Claude API Errors:**
+
 - 400 Bad Request → Log error, show generic message to user
 - 401 Unauthorized → Alert developer, show maintenance message
 - 429 Rate Limited → Wait and retry with exponential backoff
@@ -1224,6 +1292,7 @@ function validateAIResponse(response: any): AIGeneratedTopic[] {
 - Timeout (>30s) → Cancel request, show timeout message
 
 **Fallback Strategy:**
+
 - If API consistently fails (3+ consecutive errors), log alert for monitoring
 - Consider implementing pre-generated topic templates as emergency fallback (post-MVP)
 
@@ -1234,18 +1303,21 @@ function validateAIResponse(response: any): AIGeneratedTopic[] {
 ### 15.1 LeetCode Integration
 
 #### API Details
+
 - **Type:** Public/unofficial API (LeetCode GraphQL)
 - **Endpoint:** `https://leetcode.com/graphql`
 - **Authentication:** None required for problem metadata
 - **Rate Limit:** Unknown (implement conservative rate limiting)
 
 #### Data Retrieved
+
 - Problem title
 - Problem URL slug
 - Difficulty level (Easy/Medium/Hard)
 - Topic tags (for matching)
 
 #### Integration Approach
+
 1. AI generates topic titles (e.g., "Binary Search Trees")
 2. Server-side API route queries LeetCode GraphQL for problems matching tags
 3. Filter and select 3-5 most relevant problems by difficulty mix
@@ -1253,30 +1325,30 @@ function validateAIResponse(response: any): AIGeneratedTopic[] {
 5. Display as clickable links opening leetcode.com in new tab
 
 #### Sample GraphQL Query
+
 ```graphql
 query getProblemsbyTag($tag: String!) {
-  problemsetQuestionList(
-    categorySlug: ""
-    limit: 10
-    skip: 0
-    filters: { tags: [$tag] }
-  ) {
+  problemsetQuestionList(categorySlug: "", limit: 10, skip: 0, filters: { tags: [$tag] }) {
     questions {
       title
       titleSlug
       difficulty
-      topicTags { name }
+      topicTags {
+        name
+      }
     }
   }
 }
 ```
 
 #### Error Handling
+
 - LeetCode API unavailable → Skip LeetCode problems, store empty array
 - Matching problems not found → Fall back to general algorithm problems
 - Rate limit exceeded → Cache results, reuse for similar topics
 
 #### Limitations (MVP)
+
 - No authentication with user's LeetCode account
 - No synchronization of completion status
 - No direct problem submission from app
@@ -1287,29 +1359,34 @@ query getProblemsbyTag($tag: String!) {
 #### Services Used
 
 **Supabase Auth:**
+
 - Email/password authentication
 - GitHub OAuth provider
 - Session management
 - Password reset flows
 
 **Supabase Database (PostgreSQL):**
+
 - User profiles storage
 - Review topics storage
 - Analytics events storage
 - Row Level Security for data isolation
 
 **Supabase Edge Functions:**
+
 - Secure Claude API calls (hide API keys)
 - LeetCode API proxying (if needed)
 - Complex server-side logic
 
 **Supabase Realtime (Future):**
+
 - Not used in MVP
 - Potential for collaborative features post-MVP
 
 #### Configuration
 
 **Environment Variables:**
+
 ```env
 SUPABASE_URL=https://[project-id].supabase.co
 SUPABASE_ANON_KEY=[anon-public-key]
@@ -1317,6 +1394,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ```
 
 **RLS Policies:**
+
 - All tables enforce user-level data isolation
 - Service role bypasses RLS for admin operations
 - Anon key used for public (pre-auth) access
@@ -1324,12 +1402,14 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 15.3 Vercel Deployment Integration
 
 **Features Used:**
+
 - Automatic deployments from Git (main branch)
 - Environment variable management
 - Edge Functions for API routes
 - Analytics (basic)
 
 **Build Configuration:**
+
 ```json
 {
   "buildCommand": "npm run build",
@@ -1345,24 +1425,28 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 16.1 Security Measures
 
 **Authentication Security:**
+
 - Passwords hashed with bcrypt (Supabase default)
 - Secure session cookies (httpOnly, secure, sameSite)
 - OAuth state verification for GitHub login
 - CSRF protection on all state-changing operations
 
 **API Security:**
+
 - API keys stored in environment variables only
 - Supabase service role key never exposed to frontend
 - Claude API calls proxied through Edge Functions
 - Rate limiting on all API endpoints
 
 **Database Security:**
+
 - Row Level Security enforced on all tables
 - Prepared statements prevent SQL injection
 - Foreign key constraints ensure referential integrity
 - Backup strategy via Supabase automatic backups
 
 **Frontend Security:**
+
 - Content Security Policy headers
 - XSS protection via React's built-in escaping
 - No eval() or dangerous innerHTML usage
@@ -1371,24 +1455,28 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 16.2 Privacy Compliance
 
 **Data Collection:**
+
 - Email address (required for account)
 - Display name (optional)
 - Learning topics and progress (core functionality)
 - Analytic events (timestamps, action types)
 
 **Data Not Collected:**
+
 - No tracking cookies beyond session management
 - No third-party analytics in MVP
 - No social media pixels
 - No advertising identifiers
 
 **User Rights (GDPR Compliance):**
+
 - Right to access: Users can view all their data via UI
 - Right to portability: Account export (post-MVP)
 - Right to deletion: Full account deletion available
 - Right to rectification: Users can edit all their data
 
 **Privacy Policy Requirements:**
+
 - What data is collected and why
 - How data is stored (Supabase, US/EU regions)
 - Third-party services (Anthropic, LeetCode)
@@ -1415,24 +1503,28 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 17.1 Testing Scope
 
 **Unit Tests:**
+
 - API utility functions
 - Data validation functions
 - Date/time calculations
 - Permission checks
 
 **Integration Tests:**
+
 - API endpoints (CRUD operations)
 - Authentication flows
 - Database queries
 - Third-party API calls
 
 **E2E Tests (Critical Paths):**
+
 - User registration and login
 - Topic generation flow
 - Topic status updates
 - Account deletion
 
 **Manual Testing:**
+
 - UI/UX review on multiple devices
 - Accessibility testing with screen readers
 - Cross-browser compatibility
@@ -1459,11 +1551,13 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 18.1 Key Metrics to Track
 
 **User Acquisition:**
+
 - New registrations per day/week/month
 - Registration source (email vs GitHub OAuth)
 - Time to first topic generation
 
 **User Engagement:**
+
 - Monthly Active Users (MAU)
 - Topic generations per user per month
 - Topics created per user
@@ -1471,6 +1565,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Completion rate (completed / total topics)
 
 **Feature Usage:**
+
 - Technology distribution (C++ vs Python)
 - Topic difficulty distribution
 - Average estimated hours per topic
@@ -1478,35 +1573,41 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Edit frequency (how often users edit AI topics)
 
 **Retention:**
+
 - Day 1, Day 7, Day 30 retention rates
 - Churn rate
 - Time since last activity
 
 **Success Criteria Tracking:**
+
 - % users generating topics monthly (target: 75%)
 - % users updating progress (target: 90%)
 
 ### 18.2 Monitoring and Alerting
 
 **Application Monitoring:**
+
 - Error rate by endpoint
 - API response times (p50, p95, p99)
 - Claude API failure rate
 - Database query performance
 
 **Infrastructure Monitoring:**
+
 - Vercel deployment status
 - Supabase uptime
 - Database connection pool usage
 - Edge function errors
 
 **Alerts:**
+
 - Error rate >5% for any endpoint
 - Claude API consecutive failures (3+)
 - Database connection failures
 - Deployment failures
 
 **Tools:**
+
 - Sentry (error tracking - optional for MVP)
 - Vercel Analytics (basic metrics - included)
 - Supabase Dashboard (database metrics - included)
@@ -1519,6 +1620,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 19.1 Project Phases
 
 **Phase 1: Foundation (Weeks 1-2)**
+
 - Project setup (Astro, TypeScript, Tailwind, Shadcn)
 - Supabase project creation and configuration
 - Database schema design and implementation
@@ -1526,6 +1628,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Basic UI layouts (landing, dashboard, topics pages)
 
 **Phase 2: Core Features (Weeks 3-4)**
+
 - Topic CRUD API endpoints
 - Topics listing and filtering UI
 - Topic cards component
@@ -1533,6 +1636,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Manual topic creation form
 
 **Phase 3: AI Integration (Weeks 5-6)**
+
 - Anthropic Claude API integration
 - Supabase Edge Function for secure API calls
 - Topic generation UI (modal/form)
@@ -1540,12 +1644,14 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Rate limiting implementation
 
 **Phase 4: LeetCode Integration (Weeks 7-8)**
+
 - LeetCode GraphQL API integration
 - Problem matching algorithm
 - Problem display in topic cards
 - Error handling for API failures
 
 **Phase 5: Polish and Testing (Weeks 9-10)**
+
 - Responsive design refinement
 - Loading states and error handling
 - Empty states and user guidance
@@ -1554,6 +1660,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Cross-browser testing
 
 **Phase 6: Beta Launch (Weeks 11-12)**
+
 - Beta user onboarding
 - Bug fixes and iteration
 - Analytics validation
@@ -1562,23 +1669,25 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 
 ### 19.2 Milestone Deliverables
 
-| Week | Milestone | Deliverables |
-|------|-----------|-------------|
-| 2 | Foundation Complete | Working auth, database, basic UI |
-| 4 | CRUD Complete | Full topic management without AI |
-| 6 | AI Complete | Topic generation working end-to-end |
-| 8 | Integration Complete | LeetCode problems linked to topics |
-| 10 | MVP Complete | All features implemented, tested |
-| 12 | Beta Launch | 20-30 users onboarded, metrics tracking |
+| Week | Milestone            | Deliverables                            |
+| ---- | -------------------- | --------------------------------------- |
+| 2    | Foundation Complete  | Working auth, database, basic UI        |
+| 4    | CRUD Complete        | Full topic management without AI        |
+| 6    | AI Complete          | Topic generation working end-to-end     |
+| 8    | Integration Complete | LeetCode problems linked to topics      |
+| 10   | MVP Complete         | All features implemented, tested        |
+| 12   | Beta Launch          | 20-30 users onboarded, metrics tracking |
 
 ### 19.3 Team Structure (Recommended)
 
 **For MVP Development:**
+
 - 1 Full-Stack Developer (primary)
 - 1 Designer (part-time, weeks 1-2 and 9-10)
 - 1 Product Manager (oversight, user testing coordination)
 
 **Time Commitment:**
+
 - Full-Stack Developer: Full-time (8-12 weeks)
 - Designer: Part-time (~40 hours total)
 - Product Manager: Part-time (~20 hours total)
@@ -1590,6 +1699,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 20.1 Development Costs
 
 **Personnel:**
+
 - Full-Stack Developer: 8-12 weeks × $5,000-8,000/week = $40,000-96,000
 - Designer (part-time): 40 hours × $75-125/hour = $3,000-5,000
 - Product Manager (oversight): 20 hours × $100-150/hour = $2,000-3,000
@@ -1599,6 +1709,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 20.2 Infrastructure Costs (Monthly)
 
 **MVP Phase (0-100 users):**
+
 - Vercel: $0 (free tier)
 - Supabase: $0 (free tier, 50MB DB, 2GB bandwidth)
 - Anthropic Claude API: ~$100 (estimated 5,000 generations)
@@ -1606,6 +1717,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - **Total Monthly:** ~$101
 
 **Growth Phase (100-500 users):**
+
 - Vercel: $20 (Pro plan)
 - Supabase: $25 (Pro plan, 8GB DB)
 - Anthropic Claude API: ~$500 (estimated 25,000 generations)
@@ -1615,7 +1727,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 
 **Development:** $45,000-104,000 (one-time)  
 **Infrastructure:** $100-150/month (ongoing)  
-**Contingency (20%):** $9,000-21,000  
+**Contingency (20%):** $9,000-21,000
 
 **Total MVP Budget:** $54,000-125,000 + ongoing operational costs
 
@@ -1625,47 +1737,44 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 
 ### 21.1 Technical Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| Claude API unavailability | Medium | High | Implement retry logic, error messaging, fallback templates (post-MVP) |
-| Claude API cost overruns | Medium | Medium | Strict rate limiting, usage monitoring, alerts at $150/month |
-| LeetCode API changes/breaks | Medium | Low | Use unofficial API cautiously, prepare to switch to manual curation |
-| Supabase free tier limits exceeded | Low | Medium | Monitor usage closely, upgrade plan proactively |
-| Performance issues with topic generation | Low | Medium | Optimize prompts, implement caching, set timeout limits |
+| Risk                                     | Probability | Impact | Mitigation                                                            |
+| ---------------------------------------- | ----------- | ------ | --------------------------------------------------------------------- |
+| Claude API unavailability                | Medium      | High   | Implement retry logic, error messaging, fallback templates (post-MVP) |
+| Claude API cost overruns                 | Medium      | Medium | Strict rate limiting, usage monitoring, alerts at $150/month          |
+| LeetCode API changes/breaks              | Medium      | Low    | Use unofficial API cautiously, prepare to switch to manual curation   |
+| Supabase free tier limits exceeded       | Low         | Medium | Monitor usage closely, upgrade plan proactively                       |
+| Performance issues with topic generation | Low         | Medium | Optimize prompts, implement caching, set timeout limits               |
 
 ### 21.2 Product Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| AI-generated topics are low quality | Medium | High | Extensive prompt engineering, beta user feedback, manual curation option |
-| Success criteria not met (75%/90%) | Medium | Medium | Set conservative goals, iterate on UX, add engagement features |
-| Users don't see value in LeetCode integration | Low | Low | Make optional, gather feedback, improve matching algorithm |
-| Low user adoption | Medium | High | Strong marketing, community building, referral incentives |
-| Competition from similar products | Low | Medium | Focus on senior developers niche, emphasize AI personalization |
+| Risk                                          | Probability | Impact | Mitigation                                                               |
+| --------------------------------------------- | ----------- | ------ | ------------------------------------------------------------------------ |
+| AI-generated topics are low quality           | Medium      | High   | Extensive prompt engineering, beta user feedback, manual curation option |
+| Success criteria not met (75%/90%)            | Medium      | Medium | Set conservative goals, iterate on UX, add engagement features           |
+| Users don't see value in LeetCode integration | Low         | Low    | Make optional, gather feedback, improve matching algorithm               |
+| Low user adoption                             | Medium      | High   | Strong marketing, community building, referral incentives                |
+| Competition from similar products             | Low         | Medium | Focus on senior developers niche, emphasize AI personalization           |
 
 ### 21.3 Business Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|------------|--------|------------|
-| Monetization model doesn't work | Medium | High | Test pricing with beta users, offer annual discounts, add premium features |
-| CAC exceeds LTV | Medium | High | Focus on organic growth, content marketing, community building |
-| Regulatory changes (AI, privacy) | Low | Medium | Stay informed on regulations, ensure GDPR compliance, adaptable architecture |
-| Key developer unavailable | Low | High | Document thoroughly, use standard technologies, backup developer identified |
+| Risk                             | Probability | Impact | Mitigation                                                                   |
+| -------------------------------- | ----------- | ------ | ---------------------------------------------------------------------------- |
+| Monetization model doesn't work  | Medium      | High   | Test pricing with beta users, offer annual discounts, add premium features   |
+| CAC exceeds LTV                  | Medium      | High   | Focus on organic growth, content marketing, community building               |
+| Regulatory changes (AI, privacy) | Low         | Medium | Stay informed on regulations, ensure GDPR compliance, adaptable architecture |
+| Key developer unavailable        | Low         | High   | Document thoroughly, use standard technologies, backup developer identified  |
 
 ### 21.4 Risk Response Plan
 
 **High Priority (Address Immediately):**
+
 1. Claude API reliability → Implement comprehensive error handling and monitoring
 2. AI topic quality → Invest heavily in prompt engineering and user testing
 3. Cost management → Set up alerts and automatic cutoffs
 
-**Medium Priority (Monitor and Plan):**
-4. User adoption → Prepare marketing strategy and beta user outreach
-5. Success criteria → Design engaging UX, minimize friction
+**Medium Priority (Monitor and Plan):** 4. User adoption → Prepare marketing strategy and beta user outreach 5. Success criteria → Design engaging UX, minimize friction
 
-**Low Priority (Accept and Monitor):**
-6. LeetCode API stability → Use but don't over-rely on
-7. Competition → Focus on differentiation through quality
+**Low Priority (Accept and Monitor):** 6. LeetCode API stability → Use but don't over-rely on 7. Competition → Focus on differentiation through quality
 
 ---
 
@@ -1674,24 +1783,22 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 22.1 MVP Success Criteria
 
 **Primary Metrics (Must Achieve):**
+
 1. ✅ 75% of users generate new topics at least once per month
 2. ✅ 90% of users update topic status (mark as in-progress or completed)
 
-**Secondary Metrics (Nice to Have):**
-3. 60% user retention after 30 days
-4. 40% topic completion rate
-5. <5% error rate on topic generation
-6. <2s average page load time
-7. >4.0/5.0 user satisfaction rating (post-beta survey)
+**Secondary Metrics (Nice to Have):** 3. 60% user retention after 30 days 4. 40% topic completion rate 5. <5% error rate on topic generation 6. <2s average page load time 7. >4.0/5.0 user satisfaction rating (post-beta survey)
 
 ### 22.2 Validation Methodology
 
 **Quantitative:**
+
 - SQL queries on `analytics_events` table
 - Supabase dashboard for user activity
 - Automated reports generated weekly
 
 **Qualitative:**
+
 - Beta user interviews (5-10 users)
 - Post-beta survey (all users)
 - Support ticket analysis
@@ -1702,14 +1809,17 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 **After 60 Days of Beta:**
 
 **GO (Proceed to Public Launch):**
+
 - Both primary metrics achieved OR
 - One primary metric achieved + strong qualitative feedback + clear path to second metric
 
 **PIVOT (Adjust Product):**
+
 - One primary metric achieved but weak qualitative feedback
 - Missing both metrics but strong engagement in specific features
 
 **NO-GO (Halt Development):**
+
 - Both primary metrics missed significantly (<50% of target)
 - Weak qualitative feedback
 - High churn rate (>60% after 30 days)
@@ -1722,6 +1832,7 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 ### 23.1 Potential Features (Prioritized)
 
 **High Priority (Next 3-6 Months):**
+
 1. Learning streaks and gamification
 2. Topic recommendations based on completion patterns
 3. Progress analytics dashboard
@@ -1729,36 +1840,28 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 5. Email digest (weekly progress summary)
 6. More technology support (JavaScript, Java, Go)
 
-**Medium Priority (6-12 Months):**
-7. Spaced repetition reminders
-8. Community features (share topics, discuss)
-9. Integration with other coding platforms (HackerRank, Codewars)
-10. Mobile native apps (iOS/Android)
-11. Learning resources aggregation (docs, tutorials, videos)
-12. Interview preparation mode
+**Medium Priority (6-12 Months):** 7. Spaced repetition reminders 8. Community features (share topics, discuss) 9. Integration with other coding platforms (HackerRank, Codewars) 10. Mobile native apps (iOS/Android) 11. Learning resources aggregation (docs, tutorials, videos) 12. Interview preparation mode
 
-**Low Priority (Future Exploration):**
-13. AI-powered code review
-14. Mock interview practice
-15. Mentor matching
-16. Company-sponsored plans for returning developers
-17. Integration with job boards
+**Low Priority (Future Exploration):** 13. AI-powered code review 14. Mock interview practice 15. Mentor matching 16. Company-sponsored plans for returning developers 17. Integration with job boards
 
 ### 23.2 Scalability Considerations
 
 **Technical Scalability:**
+
 - Vercel's edge functions handle horizontal scaling automatically
 - Supabase can scale to millions of users with plan upgrades
 - Consider Redis for caching if response times degrade
 - Implement CDN for static assets
 
 **Cost Scalability:**
+
 - Monitor Claude API costs closely (largest variable cost)
 - Consider prompt caching to reduce token usage
 - Negotiate volume discounts with Anthropic at scale
 - Optimize database queries to stay on lower Supabase tiers longer
 
 **Team Scalability:**
+
 - Hire additional developer at 500+ users
 - Add customer support at 1,000+ users
 - Add marketing/growth role at 2,000+ users
@@ -1770,19 +1873,20 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 
 ### 24.1 Glossary
 
-| Term | Definition |
-|------|------------|
-| Career Gap | Period of time away from professional programming (10+ years for target audience) |
-| Topic | A learning unit covering a specific technical concept or skill |
-| Review | The process of studying and completing a topic |
-| LeetCode | Popular platform for algorithm practice problems |
-| RLS | Row Level Security - PostgreSQL feature for data isolation |
-| Edge Function | Serverless function running at the edge (close to users) |
-| Freemium | Business model with free basic tier and paid premium tier |
+| Term          | Definition                                                                        |
+| ------------- | --------------------------------------------------------------------------------- |
+| Career Gap    | Period of time away from professional programming (10+ years for target audience) |
+| Topic         | A learning unit covering a specific technical concept or skill                    |
+| Review        | The process of studying and completing a topic                                    |
+| LeetCode      | Popular platform for algorithm practice problems                                  |
+| RLS           | Row Level Security - PostgreSQL feature for data isolation                        |
+| Edge Function | Serverless function running at the edge (close to users)                          |
+| Freemium      | Business model with free basic tier and paid premium tier                         |
 
 ### 24.2 References
 
 **Technical Documentation:**
+
 - Astro: https://docs.astro.build
 - Supabase: https://supabase.com/docs
 - Anthropic: https://docs.anthropic.com
@@ -1790,35 +1894,36 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 - Tailwind CSS: https://tailwindcss.com/docs
 
 **Design Resources:**
+
 - Shadcn/ui: https://ui.shadcn.com
 - Tailwind UI: https://tailwindui.com
 
 **Best Practices:**
+
 - GDPR Compliance: https://gdpr.eu
 - Web Accessibility: https://www.w3.org/WAI/WCAG21/quickref/
 - Security Headers: https://securityheaders.com
 
 ### 24.3 Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | Nov 14, 2025 | Product Team | Initial PRD based on stakeholder interviews |
+| Version | Date         | Author       | Changes                                     |
+| ------- | ------------ | ------------ | ------------------------------------------- |
+| 1.0     | Nov 14, 2025 | Product Team | Initial PRD based on stakeholder interviews |
 
 ---
 
 ## 25. Approval and Sign-off
 
-**Product Manager:** _________________ Date: _______
+**Product Manager:** ********\_******** Date: **\_\_\_**
 
-**Engineering Lead:** _________________ Date: _______
+**Engineering Lead:** ********\_******** Date: **\_\_\_**
 
-**Design Lead:** _________________ Date: _______
+**Design Lead:** ********\_******** Date: **\_\_\_**
 
-**Stakeholder:** _________________ Date: _______
+**Stakeholder:** ********\_******** Date: **\_\_\_**
 
 ---
 
 **End of Document**
 
-*This PRD is a living document and will be updated as the product evolves. All changes should be documented in the revision history.*
-
+_This PRD is a living document and will be updated as the product evolves. All changes should be documented in the revision history._

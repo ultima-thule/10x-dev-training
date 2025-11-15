@@ -1,0 +1,37 @@
+---
+/**
+ * FeaturesSection Component
+ * Showcases the three main features of the application
+ * Implements responsive grid layout (ui-plan.md Section 5.3)
+ */
+import FeatureCard from "./FeatureCard.astro";
+import type { Feature } from "./types";
+
+const features: Feature[] = [
+  {
+    icon: "🧠",
+    title: "AI-Generated Topics",
+    description:
+      "Get a personalized learning plan based on your experience level and the technology you want to refresh.",
+  },
+  {
+    icon: "📊",
+    title: "Progress Tracking",
+    description: "Track your learning journey with visual progress indicators and maintain your activity streak.",
+  },
+  {
+    icon: "💻",
+    title: "LeetCode Integration",
+    description: "Practice coding with curated LeetCode problems relevant to each topic you're reviewing.",
+  },
+];
+---
+
+<section class="container px-4 py-12 sm:px-6 md:py-24 lg:px-8" aria-labelledby="features-heading">
+  <h2 id="features-heading" class="mb-12 text-center text-3xl font-bold tracking-tight sm:text-4xl">
+    Why Choose Development Refresher Training?
+  </h2>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {features.map((feature) => <FeatureCard {...feature} />)}
+  </div>
+</section>

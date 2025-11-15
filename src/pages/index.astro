@@ -1,8 +1,28 @@
 ---
-import Welcome from "../components/Welcome.astro";
-import Layout from "../layouts/Layout.astro";
+/**
+ * Landing Page
+ * Public-facing entry point for unauthenticated users
+ * Implements Server-Side Rendering and Progressive Enhancement (ui-plan.md Section 1)
+ */
+import Layout from "@/layouts/Layout.astro";
+import NavigationHeader from "@/components/landing/NavigationHeader.astro";
+import HeroSection from "@/components/landing/HeroSection.astro";
+import FeaturesSection from "@/components/landing/FeaturesSection.astro";
+import HowItWorksSection from "@/components/landing/HowItWorksSection.astro";
+import Footer from "@/components/landing/Footer.astro";
 ---
 
-<Layout>
-  <Welcome />
+<Layout
+  title="Development Refresher Training - AI-Powered Learning for Returning Developers"
+  description="Refresh your coding skills with personalized AI-generated learning paths, progress tracking, and LeetCode integration."
+>
+  <NavigationHeader />
+
+  <main id="main-content" role="main">
+    <HeroSection />
+    <FeaturesSection />
+    <HowItWorksSection />
+  </main>
+
+  <Footer />
 </Layout>

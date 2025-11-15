@@ -1,0 +1,36 @@
+---
+/**
+ * HowItWorksSection Component
+ * Explains the three-step process for using the platform
+ * Implements responsive grid layout matching overall architecture
+ */
+import ProcessStep from "./ProcessStep.astro";
+import type { ProcessStepData } from "./types";
+
+const steps: ProcessStepData[] = [
+  {
+    number: 1,
+    title: "Create Profile",
+    description: "Tell us about your previous experience level and how long you've been away from coding.",
+  },
+  {
+    number: 2,
+    title: "Generate Topics",
+    description: "Our AI creates a personalized learning plan tailored to your background and goals.",
+  },
+  {
+    number: 3,
+    title: "Track Progress",
+    description: "Mark topics as complete, maintain your streak, and watch your skills improve.",
+  },
+];
+---
+
+<section class="container px-4 py-12 sm:px-6 md:py-24 lg:px-8" aria-labelledby="how-it-works-heading">
+  <h2 id="how-it-works-heading" class="mb-12 text-center text-3xl font-bold tracking-tight sm:text-4xl">
+    How It Works
+  </h2>
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {steps.map((step) => <ProcessStep {...step} />)}
+  </div>
+</section>

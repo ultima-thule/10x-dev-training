@@ -1,14 +1,17 @@
 1. List of tables with their columns, data types, and constraints
 
 #### Enum Types
+
 - `experience_level_enum`: `('junior', 'mid', 'senior')`
 - `topic_status_enum`: `('to_do', 'in_progress', 'completed')`
 
 #### Table: `auth.users` (Supabase-managed)
+
 - Provided by Supabase Auth. Primary key: `id uuid`.
 - Serves as the parent record for all user-owned data via `profiles.id` and `topics.user_id`.
 
 #### Table: `profiles`
+
 - `id uuid PRIMARY KEY` — references `auth.users(id)` `ON DELETE CASCADE`.
 - `experience_level experience_level_enum NOT NULL`.
 - `years_away smallint NOT NULL CHECK (years_away BETWEEN 0 AND 60)`.
@@ -17,6 +20,7 @@
 - `updated_at timestamptz NOT NULL DEFAULT timezone('utc', now())`.
 
 #### Table: `topics`
+
 - `id uuid PRIMARY KEY DEFAULT gen_random_uuid()`.
 - `user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE`.
 - `parent_id uuid REFERENCES topics(id) ON DELETE CASCADE`.
@@ -74,4 +78,3 @@ CREATE POLICY topics_self_mutate
 - Add a shared trigger function (e.g., `set_updated_at()`) to keep `updated_at` columns current on `INSERT/UPDATE`.
 - `leetcode_links` stores an array of problem descriptors such as `[{ "title": "Two Sum", "url": "https://leetcode.com/...", "difficulty": "Easy" }]`; validation beyond the JSON shape can be enforced in application logic or via JSON schema checks later.
 - Activity streak calculations live in `profiles.activity_streak`; business logic updates this field whenever a qualifying action occurs.
-

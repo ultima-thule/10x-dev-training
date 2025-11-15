@@ -1,0 +1,30 @@
+---
+/**
+ * NavigationHeader Component
+ * Minimal navigation header with logo and sign-in link
+ * Following Public Layout pattern from ui-plan.md Section 4.1
+ */
+---
+
+<header
+  class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+  role="banner"
+>
+  <div class="container flex h-16 items-center justify-between">
+    <a
+      href="/"
+      class="text-xl font-bold hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+      aria-label="DevRefresh home"
+    >
+      DevRefresh
+    </a>
+    <nav aria-label="Main navigation">
+      <a
+        href="/login"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px] min-w-[44px] px-4"
+      >
+        Sign In
+      </a>
+    </nav>
+  </div>
+</header>
