@@ -322,6 +322,8 @@ Authentication is handled by Supabase Auth. The following endpoints are provided
 - **Description**: Create a new topic for the authenticated user
 - **Headers**: `Authorization: Bearer {access_token}`
 - **Request Body**:
+  - **Required**: `title`, `technology`
+  - **Optional**: `parent_id` (UUID or null), `description` (string or null), `status` (defaults to 'to_do'), `leetcode_links` (defaults to [])
 
 ```json
 {
@@ -337,6 +339,15 @@ Authentication is handled by Supabase Auth. The following endpoints are provided
       "difficulty": "Easy"
     }
   ]
+}
+```
+
+**Minimal Valid Request:**
+
+```json
+{
+  "title": "React Basics",
+  "technology": "React"
 }
 ```
 
@@ -364,9 +375,9 @@ Authentication is handled by Supabase Auth. The following endpoints are provided
 ```
 
 - **Error Responses**:
-  - `400 Bad Request`: Validation errors (missing required fields, invalid status, invalid leetcode_links format)
+  - `400 Bad Request`: Validation errors (missing required fields, invalid status, invalid leetcode_links format, invalid parent_id format)
   - `401 Unauthorized`: Missing or invalid authentication token
-  - `404 Not Found`: Parent topic does not exist
+  - `404 Not Found`: Parent topic does not exist or belongs to another user (security: don't distinguish)
 
 #### Update Topic
 

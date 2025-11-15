@@ -185,6 +185,15 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 - RLS-enforced user isolation
 - UUID validation
 
+✅ **API - Create Topic**: POST `/api/topics` to create new topics
+
+- Required fields: title, technology
+- Optional fields: parent_id, description, status (defaults to 'to_do'), leetcode_links
+- Hierarchical topic support (parent-child relationships)
+- Parent topic validation (must exist and belong to user)
+- Smart defaults for user convenience
+- Auto-generated UUID, timestamps, and user ownership
+
 ✅ **API - Update Topic**: PATCH `/api/topics/:id` to update existing topics
 
 - Partial updates (all fields optional, at least one required)
@@ -204,7 +213,7 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 
 ⏳ Supabase authentication (sign up, login, logout)
 ⏳ User profile management
-⏳ Topic CRUD operations (create, delete)
+⏳ Topic CRUD operations (delete)
 ⏳ Dashboard with progress visualization
 ⏳ Activity streak tracking
 
