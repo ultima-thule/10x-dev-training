@@ -149,12 +149,13 @@ After successful creation:
    - Listed key features: required fields, optional fields, hierarchical support, smart defaults
    - Updated "Upcoming work" section (removed "create" from CRUD operations)
 4. ✅ Commit changes with descriptive message:
+
    ```bash
    # Documentation commit
    git add .ai/api-plan.md README.md
    git commit -m "docs: update API documentation and README for POST /api/topics endpoint"
    # Commit hash: 1328bc0
-   
+
    # Implementation commit (to be done next)
    git add src/lib/validators/topic.validators.ts
    git add src/lib/services/topic.service.ts
