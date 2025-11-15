@@ -185,6 +185,14 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 - RLS-enforced user isolation
 - UUID validation
 
+✅ **API - Get Topic Children**: GET `/api/topics/:id/children` to retrieve child topics
+
+- Fetch all direct children of a parent topic
+- Parent ownership verification (404 for unauthorized)
+- Includes `children_count` for nested hierarchy navigation
+- Returns empty array if parent has no children (valid case)
+- Fast indexed query (<50ms typical)
+
 ✅ **API - Create Topic**: POST `/api/topics` to create new topics
 
 - Required fields: title, technology

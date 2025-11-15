@@ -758,3 +758,120 @@ export async function deleteTopic(supabase: SupabaseClient, userId: string, topi
     });
   }
 }
+
+/**
+ * Retrieves all direct children of a parent topic
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID
+ * @param parentId - Parent topic UUID
+ * @returns Promise resolving to array of child topics with children_count
+ * @throws TopicServiceError with 404 if parent not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Verify parent topic exists and belongs to user
+ * 2. Query all children with parent_id filter
+ * 3. Include children_count for each child (nested hierarchy support)
+ * 4. Transform and return as TopicListItemDTO[]
+ *
+ * Error Scenarios:
+ * - 404 Not Found: Parent topic doesn't exist or belongs to another user
+ * - 500 Internal Error: Database operation failed
+ */
+export async function getTopicChildren(
+  supabase: SupabaseClient,
+  userId: string,
+  parentId: string
+): Promise<TopicListItemDTO[]> {
+  try {
+    // Step 1: Verify parent topic exists and belongs to user
+    await validateParentTopic(supabase, userId, parentId);
+
+    // Step 2: Query children topics with children_count subquery
+    const { data: children, error } = await supabase
+      .from("topics")
+      .select(
+        `
+        id,
+        user_id,
+        parent_id,
+        title,
+        description,
+        status,
+        technology,
+        leetcode_links,
+        created_at,
+        updated_at,
+        children:topics!parent_id(count)
+      `
+      )
+      .eq("parent_id", parentId)
+      .eq("user_id", userId) // Redundant with RLS, but explicit for clarity
+      .order("created_at", { ascending: false });
+
+    // Step 3: Handle database errors
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("[TopicService] Failed to fetch topic children", {
+        userId,
+        parentId,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to fetch topic children",
+        },
+      });
+    }
+
+    // Step 4: Handle unexpected null result
+    if (!children) {
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to fetch topic children",
+        },
+      });
+    }
+
+    // Step 5: Transform to TopicListItemDTO[]
+    // Note: Empty array is valid (parent has no children)
+    return children.map((child) => ({
+      id: child.id,
+      user_id: child.user_id,
+      parent_id: child.parent_id,
+      title: child.title,
+      description: child.description,
+      status: child.status,
+      technology: child.technology,
+      leetcode_links: (child.leetcode_links as unknown as LeetCodeLink[]) || [],
+      created_at: child.created_at,
+      updated_at: child.updated_at,
+      children_count: (child.children as { count: number }[] | null)?.[0]?.count || 0,
+    }));
+  } catch (error) {
+    // Re-throw TopicServiceError as-is
+    if (error instanceof TopicServiceError) {
+      throw error;
+    }
+
+    // Log and wrap unexpected errors
+    // eslint-disable-next-line no-console
+    console.error("[TopicService] Unexpected error in getTopicChildren", {
+      userId,
+      parentId,
+      error: error instanceof Error ? error.message : "Unknown error",
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new TopicServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "An unexpected error occurred",
+      },
+    });
+  }
+}
