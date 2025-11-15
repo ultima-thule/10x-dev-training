@@ -202,6 +202,14 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 - Comprehensive input validation with field-level error messages
 - Privacy-focused error responses (404 for unauthorized access)
 
+✅ **API - Delete Topic**: DELETE `/api/topics/:id` to delete topics and all children
+
+- Database-level cascading delete (automatic subtree removal)
+- Single atomic transaction (all children deleted or none)
+- User ownership verification (only delete own topics)
+- Returns 204 No Content on success (idempotent operation)
+- Security-focused error responses (404 for unauthorized access)
+
 ✅ **AI Topic Generation**: POST `/api/topics/generate` with OpenRouter.ai integration
 
 - Personalized topic generation based on user profile
@@ -213,7 +221,6 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 
 ⏳ Supabase authentication (sign up, login, logout)
 ⏳ User profile management
-⏳ Topic CRUD operations (delete)
 ⏳ Dashboard with progress visualization
 ⏳ Activity streak tracking
 

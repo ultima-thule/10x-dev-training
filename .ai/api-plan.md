@@ -425,15 +425,67 @@ Authentication is handled by Supabase Auth. The following endpoints are provided
 
 - **Method**: `DELETE`
 - **Path**: `/api/topics/:id`
-- **Description**: Delete a topic and all its children (cascading delete)
+- **Description**: Delete a topic and all its children (cascading delete handled at database level)
 - **Headers**: `Authorization: Bearer {access_token}`
 - **Path Parameters**:
-  - `id`: Topic UUID
-- **Response** (204 No Content)
+  - `id`: Topic UUID (validated as valid UUID format)
+- **Response** (204 No Content):
+  - Empty response body
+  - No JSON returned on success
 - **Error Responses**:
+  - `400 Bad Request`: Invalid UUID format in path parameter
   - `401 Unauthorized`: Missing or invalid authentication token
-  - `403 Forbidden`: Topic belongs to another user (RLS)
-  - `404 Not Found`: Topic does not exist
+  - `404 Not Found`: Topic does not exist or belongs to another user (security: don't expose distinction)
+  - `500 Internal Server Error`: Database error during deletion
+
+**Key Features:**
+
+- Database-level cascading delete via `ON DELETE CASCADE` constraint
+- Single transaction ensures atomicity (all children deleted or none)
+- User ownership verification (only delete own topics)
+- Returns 404 for both non-existent and unauthorized topics (security pattern)
+- Idempotent operation (safe to retry)
+
+**Example Request:**
+
+```bash
+curl -X DELETE http://localhost:3000/api/topics/123e4567-e89b-12d3-a456-426614174000 \
+  -H "Authorization: Bearer {access_token}" \
+  -v
+```
+
+**Success Response:**
+
+```
+HTTP/1.1 204 No Content
+```
+
+**Error Example (Invalid UUID):**
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid topic ID format",
+    "details": [
+      {
+        "field": "id",
+        "message": "Topic ID must be a valid UUID"
+      }
+    ]
+  }
+}
+```
+
+**Cascading Behavior:**
+
+When a parent topic is deleted:
+
+1. Database automatically deletes all direct children
+2. Each child's deletion triggers cascade to grandchildren
+3. Process continues recursively until entire subtree is removed
+4. No manual traversal needed in application code
+5. All deletes occur in a single atomic transaction
 
 ---
 

@@ -676,3 +676,85 @@ export async function createTopic(
     });
   }
 }
+
+/**
+ * Deletes a topic and all its children (cascading delete)
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID
+ * @param topicId - Topic UUID to delete
+ * @returns Promise resolving to void (no data returned)
+ * @throws TopicServiceError with 404 if not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Execute delete query with user_id filter for authorization
+ * 2. Use count to verify deletion occurred
+ * 3. Return 404 if topic not found or unauthorized (don't distinguish)
+ * 4. Database automatically cascades delete to children via ON DELETE CASCADE
+ *
+ * Error Scenarios:
+ * - 404 Not Found: Topic doesn't exist or belongs to another user
+ * - 500 Internal Error: Database operation failed
+ */
+export async function deleteTopic(supabase: SupabaseClient, userId: string, topicId: string): Promise<void> {
+  try {
+    // Step 1: Execute delete query with count to verify deletion
+    const { error, count } = await supabase
+      .from("topics")
+      .delete({ count: "exact" })
+      .eq("id", topicId)
+      .eq("user_id", userId); // Authorization: only delete own topics
+
+    // Step 2: Handle database errors
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("[TopicService] Failed to delete topic", {
+        userId,
+        topicId,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to delete topic",
+        },
+      });
+    }
+
+    // Step 3: Handle not found (topic doesn't exist or belongs to another user)
+    if (count === 0) {
+      throw new TopicServiceError(404, {
+        error: {
+          code: "NOT_FOUND",
+          message: "Topic not found",
+        },
+      });
+    }
+
+    // Step 4: Success - return void (no data to return)
+    // Note: Database automatically cascaded delete to all children
+  } catch (error) {
+    // Re-throw TopicServiceError as-is
+    if (error instanceof TopicServiceError) {
+      throw error;
+    }
+
+    // Log and wrap unexpected errors
+    // eslint-disable-next-line no-console
+    console.error("[TopicService] Unexpected error in deleteTopic", {
+      userId,
+      topicId,
+      error: error instanceof Error ? error.message : "Unknown error",
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new TopicServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "An unexpected error occurred",
+      },
+    });
+  }
+}
