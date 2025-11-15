@@ -92,7 +92,34 @@ npm run preview
 - Project structure (high level):
   - `src/pages` (routes), `src/layouts` (layouts), `src/components` (UI), `src/lib` (utilities)
   - `public/` for static assets
-- Environment variables (e.g., Supabase, OpenRouter.ai) are not required to run the starter; they will be introduced when implementing the corresponding features from the PRD.
+
+### Environment variables
+
+Create a `.env` file in the project root with the following variables:
+
+```bash
+# Supabase Configuration
+PUBLIC_SUPABASE_URL=your_supabase_project_url
+PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# OpenRouter.ai Configuration (for AI topic generation)
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=openai/gpt-3.5-turbo  # or anthropic/claude-3-sonnet, etc.
+AI_GENERATION_TIMEOUT=30000  # milliseconds (default: 30 seconds)
+AI_RATE_LIMIT_PER_HOUR=5  # requests per hour per user (default: 5)
+```
+
+**Required for AI topic generation:**
+
+- `OPENROUTER_API_KEY`: Get your API key from [OpenRouter.ai](https://openrouter.ai/)
+- `OPENROUTER_MODEL`: Choose from available models (GPT-3.5-turbo recommended for MVP)
+
+**Optional configuration:**
+
+- `AI_GENERATION_TIMEOUT`: Maximum time to wait for AI response (default: 30000ms)
+- `AI_RATE_LIMIT_PER_HOUR`: Rate limit per user to prevent abuse (default: 5)
+
+**Note**: Never commit your `.env` file. It's already in `.gitignore`.
 
 ## Available scripts
 
@@ -143,15 +170,31 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 
 ## Project status
 
-- Status: MVP in progress
-- Current codebase: modern Astro 5 + React 19 + Tailwind 4 starter with SSR (Node adapter), ready to implement PRD features
-- Upcoming work (per PRD):
-  - Supabase auth and profile setup
-  - AI topic generation (OpenRouter.ai)
-  - Hierarchical topic CRUD + status updates + filters/sorts
-  - LeetCode link integration
-  - Dashboard and gamification (streaks)
-- Hosting note: Vercel is a simple option for initial MVP deployment; DigitalOcean + Docker is a viable path later
+- **Status**: MVP in progress
+- **Current codebase**: Modern Astro 5 + React 19 + Tailwind 4 with SSR (Node adapter)
+
+### Completed features
+
+✅ **Database Schema**: PostgreSQL schema with profiles and topics tables, RLS policies
+✅ **API - List Topics**: GET `/api/topics` with filtering, sorting, and pagination
+✅ **AI Topic Generation**: POST `/api/topics/generate` with OpenRouter.ai integration
+
+- Personalized topic generation based on user profile
+- Support for hierarchical topics (parent-child relationships)
+- Rate limiting (5 requests/hour per user)
+- Comprehensive error handling and validation
+
+### Upcoming work (per PRD)
+
+⏳ Supabase authentication (sign up, login, logout)
+⏳ User profile management
+⏳ Topic CRUD operations (create, update, delete)
+⏳ Dashboard with progress visualization
+⏳ Activity streak tracking
+
+**Hosting note**: Vercel is recommended for initial MVP deployment; DigitalOcean + Docker is viable for production scaling.
+
+**API Documentation**: See [`.ai/api-plan.md`](.ai/api-plan.md) for detailed API specifications.
 
 ## License
 

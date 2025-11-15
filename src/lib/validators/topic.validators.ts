@@ -58,3 +58,6 @@ export const ListTopicsQuerySchema = z.object({
  * Use this type for validated query parameter data
  */
 export type ListTopicsQueryInput = z.infer<typeof ListTopicsQuerySchema>;
+
+// Re-export generate topics validators
+export * from "./generate-topics.validator";

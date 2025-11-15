@@ -104,3 +104,51 @@ export async function createProfile(
   // Step 4: Return the created profile
   return newProfile;
 }
+
+/**
+ * Retrieves user profile by user ID
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - User ID to fetch profile for
+ * @returns Promise resolving to user profile
+ * @throws ProfileServiceError with 404 if profile not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Query profiles table for user's profile
+ * 2. If profile not found, throw 404 error
+ * 3. Return profile data
+ *
+ * Error Scenarios:
+ * - 404 Not Found: User profile doesn't exist (user needs to create profile first)
+ * - 500 Internal Error: Database operation failed
+ */
+export async function getProfile(supabase: SupabaseClient, userId: string): Promise<ProfileDTO> {
+  const { data: profile, error } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error("[ProfileService] Failed to fetch profile", {
+      userId,
+      error: error.message,
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new ProfileServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Failed to fetch user profile",
+      },
+    });
+  }
+
+  if (!profile) {
+    throw new ProfileServiceError(404, {
+      error: {
+        code: "NOT_FOUND",
+        message: "User profile not found. Please create a profile first.",
+      },
+    });
+  }
+
+  return profile;
+}
