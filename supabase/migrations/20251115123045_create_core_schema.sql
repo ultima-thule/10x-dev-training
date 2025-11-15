@@ -7,9 +7,25 @@ set check_function_bodies = false;
 -- ensure pgcrypto is available for gen_random_uuid()
 create extension if not exists pgcrypto with schema public;
 
--- enums match application-level constraints for profile experience and topic status
-create type if not exists public.experience_level_enum as enum ('junior', 'mid', 'senior');
-create type if not exists public.topic_status_enum as enum ('to_do', 'in_progress', 'completed');
+do $$
+begin
+  if not exists (
+    select 1 from pg_type where typname = 'experience_level_enum'
+  ) then
+    create type public.experience_level_enum as enum ('junior', 'mid', 'senior');
+  end if;
+end;
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_type where typname = 'topic_status_enum'
+  ) then
+    create type public.topic_status_enum as enum ('to_do', 'in_progress', 'completed');
+  end if;
+end;
+$$;
 
 -- shared trigger function to keep updated_at columns synchronized
 create or replace function public.set_updated_at()
