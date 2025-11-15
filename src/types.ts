@@ -5,7 +5,7 @@
  * All types are derived from database entity definitions to ensure type safety and consistency.
  */
 
-import type { Database, Tables, TablesInsert, TablesUpdate } from "./db/database.types";
+import type { Database, Tables } from "./db/database.types";
 
 // ==============================================================================
 // Utility Types

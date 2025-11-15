@@ -6,6 +6,7 @@ import type {
   LeetCodeLink,
   GenerateTopicsResponseDTO,
   TopicDTO,
+  UpdateTopicCommand,
 } from "@/types";
 import type { Json } from "@/db/database.types";
 import type { ListTopicsQueryInput, GenerateTopicsInput } from "@/lib/validators/topic.validators";
@@ -440,4 +441,125 @@ export async function getTopicById(supabase: SupabaseClient, userId: string, top
     created_at: topic.created_at,
     updated_at: topic.updated_at,
   };
+}
+
+/**
+ * Updates an existing topic with partial data
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID
+ * @param topicId - Topic UUID to update
+ * @param command - Update command with optional fields
+ * @returns Promise resolving to updated topic
+ * @throws TopicServiceError with 404 if not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Build update object with only provided fields
+ * 2. Execute update query with user_id filter for authorization
+ * 3. Return 404 if topic not found or unauthorized (don't distinguish)
+ * 4. Transform and return updated topic
+ *
+ * Error Scenarios:
+ * - 404 Not Found: Topic doesn't exist or belongs to another user
+ * - 500 Internal Error: Database operation failed
+ */
+export async function updateTopic(
+  supabase: SupabaseClient,
+  userId: string,
+  topicId: string,
+  command: UpdateTopicCommand
+): Promise<TopicDTO> {
+  try {
+    // Step 1: Build update object (only include provided fields)
+    const updateData: Record<string, unknown> = {};
+
+    if (command.title !== undefined) {
+      updateData.title = command.title;
+    }
+    if (command.description !== undefined) {
+      updateData.description = command.description;
+    }
+    if (command.status !== undefined) {
+      updateData.status = command.status;
+    }
+    if (command.technology !== undefined) {
+      updateData.technology = command.technology;
+    }
+    if (command.leetcode_links !== undefined) {
+      updateData.leetcode_links = command.leetcode_links as unknown as Json;
+    }
+
+    // Step 2: Execute update query with authorization check
+    const { data: updatedTopic, error } = await supabase
+      .from("topics")
+      .update(updateData)
+      .eq("id", topicId)
+      .eq("user_id", userId) // Authorization: only update own topics
+      .select()
+      .maybeSingle();
+
+    // Step 3: Handle database errors
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("[TopicService] Failed to update topic", {
+        userId,
+        topicId,
+        updateFields: Object.keys(updateData),
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      throw new TopicServiceError(500, {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "Failed to update topic",
+        },
+      });
+    }
+
+    // Step 4: Handle not found (topic doesn't exist or belongs to another user)
+    if (!updatedTopic) {
+      throw new TopicServiceError(404, {
+        error: {
+          code: "NOT_FOUND",
+          message: "Topic not found",
+        },
+      });
+    }
+
+    // Step 5: Transform to TopicDTO
+    return {
+      id: updatedTopic.id,
+      user_id: updatedTopic.user_id,
+      parent_id: updatedTopic.parent_id,
+      title: updatedTopic.title,
+      description: updatedTopic.description,
+      status: updatedTopic.status,
+      technology: updatedTopic.technology,
+      leetcode_links: (updatedTopic.leetcode_links as unknown as LeetCodeLink[]) || [],
+      created_at: updatedTopic.created_at,
+      updated_at: updatedTopic.updated_at,
+    };
+  } catch (error) {
+    // Re-throw TopicServiceError as-is
+    if (error instanceof TopicServiceError) {
+      throw error;
+    }
+
+    // Log and wrap unexpected errors
+    // eslint-disable-next-line no-console
+    console.error("[TopicService] Unexpected error in updateTopic", {
+      userId,
+      topicId,
+      error: error instanceof Error ? error.message : "Unknown error",
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new TopicServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "An unexpected error occurred",
+      },
+    });
+  }
 }

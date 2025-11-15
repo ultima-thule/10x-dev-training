@@ -59,6 +59,69 @@ export const ListTopicsQuerySchema = z.object({
  */
 export type ListTopicsQueryInput = z.infer<typeof ListTopicsQuerySchema>;
 
+/**
+ * Validation schema for LeetCode link structure
+ * Used in topic updates to validate individual link objects
+ */
+const LeetCodeLinkSchema = z.object({
+  title: z.string().min(1, { message: "LeetCode link title is required" }),
+  url: z.string().url({ message: "LeetCode URL must be valid" }),
+  difficulty: z.enum(["Easy", "Medium", "Hard"], {
+    errorMap: () => ({
+      message: "Difficulty must be one of: Easy, Medium, Hard",
+    }),
+  }),
+});
+
+/**
+ * Validation schema for updating a topic
+ *
+ * All fields are optional to support partial updates.
+ * At least one field must be provided.
+ *
+ * Validates:
+ * - title: Optional string (1-200 chars)
+ * - description: Optional string or null (max 1000 chars)
+ * - status: Optional enum (to_do, in_progress, completed)
+ * - technology: Optional string (1-100 chars, alphanumeric + .-_)
+ * - leetcode_links: Optional array of validated link objects (max 5)
+ */
+export const UpdateTopicCommandSchema = z
+  .object({
+    title: z
+      .string()
+      .min(1, { message: "Title must not be empty" })
+      .max(200, { message: "Title must not exceed 200 characters" })
+      .optional(),
+    description: z.string().max(1000, { message: "Description must not exceed 1000 characters" }).nullable().optional(),
+    status: z
+      .enum(["to_do", "in_progress", "completed"], {
+        errorMap: () => ({
+          message: "Status must be one of: to_do, in_progress, completed",
+        }),
+      })
+      .optional(),
+    technology: z
+      .string()
+      .min(1, { message: "Technology must not be empty" })
+      .max(100, { message: "Technology must not exceed 100 characters" })
+      .regex(/^[a-zA-Z0-9\s.\-_]+$/, {
+        message: "Technology must contain only alphanumeric characters, spaces, dots, hyphens, and underscores",
+      })
+      .optional(),
+    leetcode_links: z.array(LeetCodeLinkSchema).max(5, { message: "Maximum 5 LeetCode links per topic" }).optional(),
+  })
+  .strict() // Reject unknown fields
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update",
+  });
+
+/**
+ * Type inference from UpdateTopicCommandSchema
+ * Use this type for validated update command data
+ */
+export type UpdateTopicCommandInput = z.infer<typeof UpdateTopicCommandSchema>;
+
 // Re-export generate topics validators
 export * from "./generate-topics.validator";
 

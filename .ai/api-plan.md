@@ -406,10 +406,9 @@ Authentication is handled by Supabase Auth. The following endpoints are provided
 ```
 
 - **Error Responses**:
-  - `400 Bad Request`: Validation errors
+  - `400 Bad Request`: Validation errors (invalid UUID, empty body, invalid fields)
   - `401 Unauthorized`: Missing or invalid authentication token
-  - `403 Forbidden`: Topic belongs to another user (RLS)
-  - `404 Not Found`: Topic does not exist
+  - `404 Not Found`: Topic does not exist or belongs to another user (security: don't distinguish)
 
 #### Delete Topic
 
