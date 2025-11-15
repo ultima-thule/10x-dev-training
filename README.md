@@ -176,7 +176,15 @@ For full requirements and user stories, see [`.ai/prd.md`](.ai/prd.md).
 ### Completed features
 
 ✅ **Database Schema**: PostgreSQL schema with profiles and topics tables, RLS policies
+
 ✅ **API - List Topics**: GET `/api/topics` with filtering, sorting, and pagination
+
+✅ **API - Get Topic**: GET `/api/topics/:id` to retrieve single topic details
+
+- Fast primary key lookup (<10ms)
+- RLS-enforced user isolation
+- UUID validation
+
 ✅ **AI Topic Generation**: POST `/api/topics/generate` with OpenRouter.ai integration
 
 - Personalized topic generation based on user profile

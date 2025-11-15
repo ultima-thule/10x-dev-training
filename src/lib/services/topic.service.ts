@@ -7,6 +7,7 @@ import type {
   GenerateTopicsResponseDTO,
   TopicDTO,
 } from "@/types";
+import type { Json } from "@/db/database.types";
 import type { ListTopicsQueryInput, GenerateTopicsInput } from "@/lib/validators/topic.validators";
 import { generateTopics as callAIService, AIServiceError } from "./ai.service";
 import { getProfile, ProfileServiceError } from "./profile.service";
@@ -309,7 +310,7 @@ export async function generateUserTopics(
       description: topic.description,
       status: "to_do" as const,
       technology: command.technology,
-      leetcode_links: topic.leetcode_links,
+      leetcode_links: topic.leetcode_links as unknown as Json,
     }));
 
     // Step 6: Batch insert topics into database
@@ -372,4 +373,71 @@ export async function generateUserTopics(
       },
     });
   }
+}
+
+/**
+ * Retrieves a single topic by ID
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID
+ * @param topicId - Topic UUID to retrieve
+ * @returns Promise resolving to topic details
+ * @throws TopicServiceError with 404 if not found, 500 for database errors
+ *
+ * Business Logic:
+ * 1. Query topics table by ID and user_id
+ * 2. Return topic if found
+ * 3. Throw 404 if not found or unauthorized (RLS enforces user isolation)
+ *
+ * Error Scenarios:
+ * - 404 Not Found: Topic doesn't exist or belongs to another user
+ * - 500 Internal Error: Database operation failed
+ */
+export async function getTopicById(supabase: SupabaseClient, userId: string, topicId: string): Promise<TopicDTO> {
+  const { data: topic, error } = await supabase
+    .from("topics")
+    .select("*")
+    .eq("id", topicId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error("[TopicService] Failed to fetch topic", {
+      userId,
+      topicId,
+      error: error.message,
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new TopicServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Failed to retrieve topic",
+      },
+    });
+  }
+
+  if (!topic) {
+    throw new TopicServiceError(404, {
+      error: {
+        code: "NOT_FOUND",
+        message: "Topic not found",
+      },
+    });
+  }
+
+  // Transform to TopicDTO (ensure leetcode_links is properly typed)
+  return {
+    id: topic.id,
+    user_id: topic.user_id,
+    parent_id: topic.parent_id,
+    title: topic.title,
+    description: topic.description,
+    status: topic.status,
+    technology: topic.technology,
+    leetcode_links: (topic.leetcode_links as unknown as LeetCodeLink[]) || [],
+    created_at: topic.created_at,
+    updated_at: topic.updated_at,
+  };
 }

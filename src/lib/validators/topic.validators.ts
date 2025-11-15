@@ -61,3 +61,6 @@ export type ListTopicsQueryInput = z.infer<typeof ListTopicsQuerySchema>;
 
 // Re-export generate topics validators
 export * from "./generate-topics.validator";
+
+// Re-export topic ID validator
+export * from "./topic-id.validator";
