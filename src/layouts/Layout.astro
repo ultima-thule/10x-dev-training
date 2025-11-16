@@ -1,13 +1,24 @@
 ---
 import "../styles/global.css";
-import type { ThemeBootstrapScriptConfig } from "@/types/ui/landing";
+import AuthHeader from "@/components/auth/AuthHeader.astro";
+import type { ThemeBootstrapScriptConfig, ThemePreference } from "@/types/ui/landing";
 
 interface Props {
   title?: string;
   description?: string;
+  showAuthHeader?: boolean;
+  themePreference?: ThemePreference;
 }
 
-const { title = "10x Dev Training", description = "AI-powered learning for returning developers" } = Astro.props;
+const {
+  title = "10x Dev Training",
+  description = "AI-powered learning for returning developers",
+  showAuthHeader = false,
+  themePreference = "light",
+} = Astro.props;
+
+// Get user state from middleware
+const { user } = Astro.locals;
 
 const themeConfig: ThemeBootstrapScriptConfig = {
   storageKey: "drt:theme",
@@ -104,6 +115,14 @@ const themeBootstrapScript = `(function () {
     >
       Skip to main content
     </a>
+
+    <!-- Authenticated User Header (conditionally rendered) -->
+    {
+      showAuthHeader && user && (
+        <AuthHeader userEmail={user.email} themePreference={themePreference} currentPath={Astro.url.pathname} />
+      )
+    }
+
     <slot />
   </body>
 </html>

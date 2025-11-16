@@ -1,0 +1,169 @@
+---
+/**
+ * Authenticated User Header
+ * Navigation header for logged-in users
+ *
+ * @implements auth-spec.md Section 2.2
+ * @implements US-003: User Logout
+ *
+ * Features:
+ * - Displays user email
+ * - Navigation links for authenticated pages
+ * - Logout button with loading state
+ * - Theme toggle
+ * - Responsive mobile menu
+ */
+import ThemeToggle from "@/components/landing/ThemeToggle";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import type { ThemePreference } from "@/types/ui/landing";
+
+interface Props {
+  userEmail: string;
+  themePreference?: ThemePreference;
+  currentPath?: string;
+}
+
+const { userEmail, themePreference = "light", currentPath = "" } = Astro.props;
+
+const navLinks = [
+  { label: "Dashboard", href: "/dashboard", id: "nav-dashboard" },
+  { label: "Topics", href: "/app/topics", id: "nav-topics" },
+  { label: "Profile", href: "/profile", id: "nav-profile" },
+];
+
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(href + "/");
+
+const mobileMenuScript = `
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.querySelector("[data-mobile-menu-toggle]");
+    const menu = document.querySelector("[data-mobile-menu]");
+
+    if (toggle && menu) {
+      toggle.addEventListener("click", () => {
+        const isHidden = menu.classList.contains("hidden");
+        if (isHidden) {
+          menu.classList.remove("hidden");
+          toggle.setAttribute("aria-expanded", "true");
+        } else {
+          menu.classList.add("hidden");
+          toggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  });
+`;
+---
+
+<header
+  class="sticky top-0 z-40 w-full border-b border-border/80 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70"
+  role="banner"
+>
+  <div class="container flex h-16 items-center justify-between gap-4 px-4">
+    <!-- Logo / Brand -->
+    <a
+      href="/dashboard"
+      class="flex items-center gap-2 text-base font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-sm"
+      aria-label="Go to dashboard"
+    >
+      <span class="text-lg font-semibold sm:text-xl">Dev Refresher</span>
+      <span
+        class="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-primary"
+      >
+        App
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden flex-1 items-center justify-center md:flex" aria-label="Main navigation">
+      <ul class="flex items-center gap-6 text-sm font-medium">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                id={link.id}
+                class:list={[
+                  "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-sm px-3 py-2 rounded-md",
+                  isActive(link.href)
+                    ? "text-foreground font-semibold bg-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                ]}
+                aria-current={isActive(link.href) ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- User Info & Actions -->
+    <div class="hidden items-center gap-3 md:flex">
+      <span class="text-sm text-muted-foreground" aria-label={`Logged in as ${userEmail}`}>
+        {userEmail}
+      </span>
+      <ThemeToggle client:idle initialTheme={themePreference} />
+      <LogoutButton client:load />
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="flex items-center gap-2 md:hidden">
+      <ThemeToggle client:idle initialTheme={themePreference} />
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        aria-label="Open menu"
+        data-mobile-menu-toggle
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="size-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    class="hidden border-t border-border bg-background md:hidden"
+    data-mobile-menu
+    role="dialog"
+    aria-label="Mobile navigation"
+  >
+    <nav class="container space-y-1 px-4 py-4" aria-label="Mobile main navigation">
+      <div class="mb-4 border-b border-border pb-3">
+        <p class="text-sm font-medium text-muted-foreground">Logged in as</p>
+        <p class="text-sm text-foreground">{userEmail}</p>
+      </div>
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              "block rounded-md px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              isActive(link.href)
+                ? "bg-accent text-foreground"
+                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+            ]}
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <div class="pt-4 border-t border-border">
+        <LogoutButton client:load />
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script is:inline set:html={mobileMenuScript} />
