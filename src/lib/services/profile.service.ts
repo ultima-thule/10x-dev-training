@@ -106,6 +106,75 @@ export async function createProfile(
 }
 
 /**
+ * Creates or updates a user profile using UPSERT logic
+ *
+ * @implements US-004: Initial User Profile Setup
+ * @implements auth-spec.md Section 3.1 (POST /api/profile/setup)
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - Authenticated user's ID from JWT token
+ * @param command - Profile creation/update data (experience_level, years_away)
+ * @returns Promise resolving to the created or updated profile
+ * @throws ProfileServiceError with appropriate status code and error response
+ *
+ * Business Logic:
+ * 1. Use PostgreSQL UPSERT (INSERT ... ON CONFLICT ... DO UPDATE)
+ * 2. If profile doesn't exist, create it with default activity_streak of 0
+ * 3. If profile exists, update experience_level and years_away
+ * 4. Return the final profile state
+ *
+ * Error Scenarios:
+ * - 500 Internal Error: Database operation failed
+ *
+ * Note: This function implements the UPSERT strategy requested for profile setup
+ * to handle both first-time setup and profile updates through the same endpoint.
+ */
+export async function upsertProfile(
+  supabase: SupabaseClient,
+  userId: string,
+  command: CreateProfileCommand
+): Promise<ProfileDTO> {
+  // Use Supabase's upsert method which implements INSERT ... ON CONFLICT ... DO UPDATE
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        id: userId,
+        experience_level: command.experience_level,
+        years_away: command.years_away,
+        // Only set activity_streak on insert, preserve existing value on update
+        activity_streak: 0,
+      },
+      {
+        onConflict: "id",
+        // Don't update activity_streak if profile already exists
+        ignoreDuplicates: false,
+      }
+    )
+    .select()
+    .single();
+
+  // Handle database error during upsert
+  if (error || !profile) {
+    // eslint-disable-next-line no-console
+    console.error("[ProfileService] Upsert profile failed", {
+      userId,
+      error: error?.message,
+      timestamp: new Date().toISOString(),
+    });
+
+    throw new ProfileServiceError(500, {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Failed to save profile. Please try again.",
+      },
+    });
+  }
+
+  return profile;
+}
+
+/**
  * Retrieves user profile by user ID
  *
  * @param supabase - Supabase client instance

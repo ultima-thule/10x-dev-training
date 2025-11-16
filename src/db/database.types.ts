@@ -98,7 +98,7 @@ export interface Database {
     Views: Record<never, never>;
     Functions: Record<never, never>;
     Enums: {
-      experience_level_enum: "junior" | "mid" | "senior";
+      experience_level_enum: "beginner" | "intermediate" | "advanced" | "expert";
       topic_status_enum: "to_do" | "in_progress" | "completed";
     };
     CompositeTypes: Record<never, never>;

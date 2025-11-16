@@ -133,9 +133,10 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, request, url
         .from("profiles")
         .select("id")
         .eq("id", locals.user.id)
-        .single();
+        .maybeSingle();
 
-      // If profile doesn't exist, redirect to profile setup
+      // If profile doesn't exist or there was an error fetching it, redirect to profile setup
+      // Using maybeSingle() to gracefully handle the case where no profile exists yet
       if (error || !profile) {
         return redirect("/profile/setup");
       }

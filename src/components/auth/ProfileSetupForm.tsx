@@ -5,10 +5,24 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type ExperienceLevel = "beginner" | "intermediate" | "advanced" | "expert";
+type YearsAway = "less-than-1" | "1-2" | "3-5" | "more-than-5";
 
+/**
+ * ProfileSetupForm Component
+ *
+ * @implements US-004: Initial User Profile Setup
+ * @implements auth-spec.md Section 2.2
+ *
+ * Collects user's previous experience level and time away from coding.
+ * Submits data to /api/profile/setup and redirects to /dashboard on success.
+ *
+ * Error Handling:
+ * - Validation errors: Display field-specific error messages
+ * - Server errors: Display generic error message
+ */
 export function ProfileSetupForm() {
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | "">("");
-  const [yearsAway, setYearsAway] = useState("");
+  const [yearsAway, setYearsAway] = useState<YearsAway | "">("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,11 +47,45 @@ export function ProfileSetupForm() {
 
     setIsLoading(true);
 
-    // TODO: Backend integration will be added in next steps
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Call API endpoint to save profile
+      const response = await fetch("/api/profile/setup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          experienceLevel,
+          yearsAway,
+        }),
+      });
 
-    setIsLoading(false);
-    setError("Backend integration pending");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle validation errors (detailed error messages)
+        if (response.status === 400 && data.error?.details) {
+          // Extract first validation error message
+          const firstError = data.error.details[0];
+          setError(firstError?.message || data.error.message);
+        } else {
+          // Handle other errors (generic error messages for security)
+          setError(data.error?.message || "An unexpected error occurred. Please try again.");
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // Success: Redirect to dashboard
+      // Use globalThis.location for full page navigation to ensure proper state refresh
+      globalThis.location.href = data.redirectUrl || "/dashboard";
+    } catch (err) {
+      // Handle network errors or unexpected failures
+      // eslint-disable-next-line no-console
+      console.error("[ProfileSetupForm] Network error:", err);
+      setError("Unable to connect to the server. Please check your connection and try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -64,10 +112,10 @@ export function ProfileSetupForm() {
             <SelectValue placeholder="Select your experience level" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="beginner">Beginner (0-1 years)</SelectItem>
-            <SelectItem value="intermediate">Intermediate (2-3 years)</SelectItem>
-            <SelectItem value="advanced">Advanced (4-7 years)</SelectItem>
-            <SelectItem value="expert">Expert (8+ years)</SelectItem>
+            <SelectItem value="beginner">Beginner - Just starting out (0-2 years)</SelectItem>
+            <SelectItem value="intermediate">Intermediate - Building confidence (2-4 years)</SelectItem>
+            <SelectItem value="advanced">Advanced - Strong foundation (4-8 years)</SelectItem>
+            <SelectItem value="expert">Expert - Deep expertise (8+ years)</SelectItem>
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">This helps us tailor your learning path</p>
@@ -75,7 +123,7 @@ export function ProfileSetupForm() {
 
       <div className="space-y-2">
         <Label htmlFor={yearsAwayId}>How long have you been away from coding?</Label>
-        <Select value={yearsAway} onValueChange={setYearsAway} disabled={isLoading}>
+        <Select value={yearsAway} onValueChange={(value) => setYearsAway(value as YearsAway)} disabled={isLoading}>
           <SelectTrigger
             id={yearsAwayId}
             aria-required="true"
