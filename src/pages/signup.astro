@@ -1,27 +1,52 @@
 ---
 /**
- * Sign Up Page (Placeholder)
- * Temporary page until authentication is implemented
+ * Sign Up Page
+ * Public-facing page for user registration
+ * Implements Server-Side Rendering (auth-spec.md Section 2.1)
  */
 import Layout from "@/layouts/Layout.astro";
+import PublicHeader from "@/components/landing/PublicHeader.astro";
+import Footer from "@/components/landing/Footer.astro";
+import { SignupForm } from "@/components/auth/SignupForm";
+import { getLandingContent } from "@/types/ui/landing";
+
+const landingContent = getLandingContent();
 ---
 
 <Layout
   title="Sign Up - Development Refresher Training"
-  description="Create your account to start refreshing your coding skills"
+  description="Create an account to start your personalized learning journey"
 >
-  <main id="main-content" class="container flex min-h-screen items-center justify-center px-4">
-    <div class="text-center max-w-md">
-      <h1 class="text-4xl font-bold">Sign Up</h1>
-      <p class="mt-4 text-muted-foreground leading-relaxed">
-        Signup page coming soon. Authentication will be implemented with Supabase.
-      </p>
-      <a
-        href="/"
-        class="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px]"
-      >
-        ← Back to Home
-      </a>
-    </div>
+  <PublicHeader header={landingContent.header} />
+
+  <main id="main-content" role="main" class="min-h-[calc(100vh-4rem)]">
+    <section
+      class="relative overflow-hidden bg-gradient-to-b from-background via-background to-background/90 py-16 sm:py-20 lg:py-24"
+    >
+      <div class="absolute inset-0 -z-10">
+        <div
+          class="pointer-events-none absolute left-1/2 top-0 size-[480px] -translate-x-1/2 rounded-full bg-primary/20 blur-[160px] sm:size-[640px]"
+          aria-hidden="true"
+        >
+        </div>
+      </div>
+
+      <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-md">
+          <div class="space-y-6">
+            <div class="space-y-2 text-center">
+              <h1 class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Create your account</h1>
+              <p class="text-base text-muted-foreground sm:text-lg">Start your personalized learning journey today</p>
+            </div>
+
+            <div class="rounded-lg border border-border/60 bg-card p-6 shadow-lg sm:p-8">
+              <SignupForm client:load />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <Footer />
 </Layout>
