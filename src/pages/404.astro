@@ -3,10 +3,14 @@
  * 404 Not Found Page
  * Error page for invalid routes or resources
  * Following error page pattern from ui-plan.md Section 2.5.2
+ *
+ * Server-rendered to support middleware authentication checks
  */
 import Layout from "@/layouts/Layout.astro";
 
-export const prerender = true;
+const { user } = Astro.locals;
+
+export const prerender = false;
 ---
 
 <Layout title="404 - Page Not Found" description="The page you're looking for doesn't exist">
@@ -40,12 +44,23 @@ export const prerender = true;
 
       <!-- CTAs -->
       <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
-        <a
-          href="/dashboard"
-          class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px]"
-        >
-          Go to Dashboard
-        </a>
+        {
+          user ? (
+            <a
+              href="/dashboard"
+              class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px]"
+            >
+              Go to Dashboard
+            </a>
+          ) : (
+            <a
+              href="/login"
+              class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px]"
+            >
+              Log In
+            </a>
+          )
+        }
         <a
           href="/"
           class="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px]"
