@@ -115,13 +115,13 @@ const defaultContent: LandingContentVM = {
     ],
     primaryCTA: {
       label: "Sign Up",
-      href: "/auth/register",
+      href: "/signup",
       variant: "primary",
       ariaLabel: "Sign up for Development Refresher Training",
     },
     secondaryCTA: {
       label: "Log In",
-      href: "/auth/login",
+      href: "/login",
       variant: "secondary",
       ariaLabel: "Log in to your account",
     },
@@ -138,7 +138,7 @@ const defaultContent: LandingContentVM = {
     ],
     primaryCTA: {
       label: "Start for Free",
-      href: "/auth/register",
+      href: "/signup",
       variant: "primary",
       ariaLabel: "Go to registration and start your free learning plan",
     },
@@ -217,7 +217,7 @@ const defaultContent: LandingContentVM = {
       },
       cta: {
         label: "Generate Topics",
-        href: "/auth/register",
+        href: "/signup",
         variant: "primary",
       },
     },
@@ -263,12 +263,12 @@ const defaultContent: LandingContentVM = {
     description: "Create an account in seconds and start following a learning plan designed specifically for you.",
     primaryCTA: {
       label: "Start Now",
-      href: "/auth/register",
+      href: "/signup",
       variant: "primary",
     },
     secondaryCTA: {
       label: "Already have an account?",
-      href: "/auth/login",
+      href: "/login",
       variant: "ghost",
     },
   },
