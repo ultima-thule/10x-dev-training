@@ -109,48 +109,48 @@ const defaultContent: LandingContentVM = {
   header: {
     productName: "Development Refresher Training",
     links: [
-      { id: "benefits", label: "Korzyści", href: "#benefits" },
-      { id: "features", label: "Funkcje", href: "#features" },
-      { id: "metrics", label: "Dlaczego my", href: "#metrics" },
+      { id: "benefits", label: "Benefits", href: "#benefits" },
+      { id: "features", label: "Features", href: "#features" },
+      { id: "metrics", label: "Why Us", href: "#metrics" },
     ],
     primaryCTA: {
-      label: "Zarejestruj się",
+      label: "Sign Up",
       href: "/auth/register",
       variant: "primary",
-      ariaLabel: "Zarejestruj się w Development Refresher Training",
+      ariaLabel: "Sign up for Development Refresher Training",
     },
     secondaryCTA: {
-      label: "Zaloguj się",
+      label: "Log In",
       href: "/auth/login",
       variant: "secondary",
-      ariaLabel: "Zaloguj się do swojego konta",
+      ariaLabel: "Log in to your account",
     },
   },
   hero: {
-    eyebrow: "AI-powered powrót do kodowania",
-    title: "Indywidualny plan nauki, który przyspiesza Twój powrót do branży.",
+    eyebrow: "AI-powered return to coding",
+    title: "A personalized learning plan that accelerates your return to the industry.",
     subtitle:
-      "Development Refresher Training łączy generowanie tematów przez AI, hierarchię zagadnień oraz integrację z LeetCode, abyś mógł wrócić do programowania z pewnością siebie.",
+      "Development Refresher Training combines AI-generated topics, hierarchical concepts, and LeetCode integration so you can return to programming with confidence.",
     bulletPoints: [
-      "Spersonalizowane tematy zgodne z Twoim profilem",
-      "Widok postępów i aktywny streak motywujący do działania",
-      "Bezpośrednie linki do wyzwań LeetCode",
+      "Personalized topics tailored to your profile",
+      "Progress view and active streak to keep you motivated",
+      "Direct links to LeetCode challenges",
     ],
     primaryCTA: {
-      label: "Rozpocznij bezpłatnie",
+      label: "Start for Free",
       href: "/auth/register",
       variant: "primary",
-      ariaLabel: "Przejdź do rejestracji i rozpocznij bezpłatny plan nauki",
+      ariaLabel: "Go to registration and start your free learning plan",
     },
     secondaryCTA: {
-      label: "Zobacz jak to działa",
+      label: "See How It Works",
       href: "#features",
       variant: "secondary",
-      ariaLabel: "Przewiń do sekcji z funkcjami Development Refresher Training",
+      ariaLabel: "Scroll to Development Refresher Training features section",
     },
     image: {
       src: "/landing-hero.svg",
-      alt: "Zrzut ekranu przedstawiający dashboard Development Refresher Training z listą tematów, streakiem i integracją z LeetCode",
+      alt: "Screenshot showing Development Refresher Training dashboard with topic list, streak, and LeetCode integration",
       width: 1200,
       height: 960,
       sizes: "(min-width: 1024px) 50vw, 90vw",
@@ -160,124 +160,122 @@ const defaultContent: LandingContentVM = {
     {
       id: "benefit-ai-plan",
       icon: "sparkles",
-      title: "AI-generowany plan nauki",
-      description: "Wybierz technologię, a algorytm wygeneruje hierarchię tematów dopasowaną do Twojego doświadczenia.",
+      title: "AI-Generated Learning Plan",
+      description: "Choose a technology and the algorithm will generate a topic hierarchy tailored to your experience.",
       relatedStory: "US-005",
     },
     {
       id: "benefit-hierarchy",
       icon: "layers",
-      title: "Hierarchia zagadnień",
-      description:
-        "Przeglądaj drzewo tematów i rozwijaj podtematy, aby skupić się na kluczowych lukach kompetencyjnych.",
+      title: "Topic Hierarchy",
+      description: "Browse the topic tree and expand subtopics to focus on key skill gaps.",
       relatedStory: "US-006",
     },
     {
       id: "benefit-status",
       icon: "status",
-      title: "Śledzenie statusów",
-      description:
-        "Oznaczaj tematy jako Do zrobienia, W trakcie lub Ukończone – dashboard aktualizuje się w czasie rzeczywistym.",
+      title: "Status Tracking",
+      description: "Mark topics as To Do, In Progress, or Completed – the dashboard updates in real-time.",
       relatedStory: "US-008",
     },
     {
       id: "benefit-leetcode",
       icon: "leetcode",
-      title: "Linki do LeetCode",
-      description: "Każdy temat zawiera praktyczne zadania z LeetCode, aby natychmiast przećwiczyć teorię.",
+      title: "LeetCode Links",
+      description: "Every topic includes practical LeetCode problems to immediately practice the theory.",
       relatedStory: "US-009",
     },
     {
       id: "benefit-dashboard",
       icon: "dashboard",
-      title: "Czytelny dashboard",
-      description: "Monitoruj liczbę ukończonych tematów, aktywne technologie i dzienny streak.",
+      title: "Clear Dashboard",
+      description: "Monitor the number of completed topics, active technologies, and daily streak.",
       relatedStory: "US-010",
     },
     {
       id: "benefit-gamification",
       icon: "fire",
-      title: "Gamifikacja i streak",
-      description: "Motywujące wskaźniki oraz streak aktywności pozwalają utrzymać rytm nauki.",
+      title: "Gamification and Streak",
+      description: "Motivating metrics and activity streak help you maintain your learning rhythm.",
       relatedStory: "US-010",
     },
   ],
   highlights: [
     {
       id: "highlight-ai",
-      title: "Generuj plan oparty na AI",
-      description:
-        "Wprowadź kluczową technologię i pozwól AI zaproponować kolejne kroki wraz z rekomendowanymi zadaniami.",
+      title: "Generate AI-Based Plan",
+      description: "Enter a key technology and let AI suggest next steps with recommended exercises.",
       bulletPoints: [
-        "Uwzględnia poziom doświadczenia i przerwę od branży",
-        "Sugestie tematów aktualizowane na podstawie historii postępów",
-        "Struktura od ogółu do szczegółu dla jasnej ścieżki nauki",
+        "Considers experience level and time away from the industry",
+        "Topic suggestions updated based on progress history",
+        "Structure from general to specific for a clear learning path",
       ],
       media: {
         type: "illustration",
         src: "/illustrations/ai-plan.svg",
-        alt: "Schemat AI tworzący listę tematów nauki",
+        alt: "AI diagram creating a learning topic list",
       },
       cta: {
-        label: "Wygeneruj tematy",
+        label: "Generate Topics",
         href: "/auth/register",
         variant: "primary",
       },
     },
     {
       id: "highlight-dashboard",
-      title: "Panel postępów w czasie rzeczywistym",
-      description: "Widok dashboardu od razu pokazuje ile tematów ukończyłeś i które wymagają Twojej uwagi.",
+      title: "Real-Time Progress Dashboard",
+      description:
+        "The dashboard view instantly shows how many topics you've completed and which require your attention.",
       bulletPoints: [
-        "Podział statusów Do zrobienia / W trakcie / Ukończone",
-        "Lista technologii z największą liczbą tematów",
-        "Historia aktywności z ostatnich 7 dni",
+        "Breakdown of To Do / In Progress / Completed statuses",
+        "List of technologies with the most topics",
+        "Activity history from the last 7 days",
       ],
       media: {
         type: "image",
         src: "/illustrations/dashboard.svg",
-        alt: "Makieta dashboardu pokazująca statystyki użytkownika",
+        alt: "Dashboard mockup showing user statistics",
       },
     },
     {
       id: "highlight-leetcode",
-      title: "Praktyczne zadania z LeetCode",
-      description: "Każdy temat zawiera serię sprawdzonych ćwiczeń, które otworzysz jednym kliknięciem.",
+      title: "Practical LeetCode Problems",
+      description: "Every topic includes a series of vetted exercises you can open with one click.",
       bulletPoints: [
-        "Bezpośrednie linki do zadań dopasowanych do tematu",
-        "Informacje o poziomie trudności i oczekiwanym czasie",
-        "Możliwość śledzenia, które zadania zostały ukończone",
+        "Direct links to problems matched to the topic",
+        "Information about difficulty level and expected time",
+        "Ability to track which problems have been completed",
       ],
       media: {
         type: "illustration",
         src: "/illustrations/leetcode.svg",
-        alt: "Ilustracja przedstawiająca użytkownika rozwiązującego zadania LeetCode",
+        alt: "Illustration showing a user solving LeetCode problems",
       },
     },
   ],
   metrics: [
-    { label: "Użytkownicy utrzymują streak", value: "92%", caption: "aktywnych osób aktualizuje status co tydzień" },
-    { label: "Szybszy powrót do pracy", value: "4,5 mies.", caption: "średni czas przygotowania po 60 dniach nauki" },
-    { label: "Pokryte technologie", value: "30+", caption: "najpopularniejszych stosów w bibliotece tematów" },
+    { label: "Users maintain streak", value: "92%", caption: "of active users update status weekly" },
+    { label: "Faster return to work", value: "4.5 mo.", caption: "average preparation time after 60 days of learning" },
+    { label: "Technologies covered", value: "30+", caption: "most popular stacks in the topic library" },
   ],
   ctaBanner: {
-    title: "Gotowy wrócić do kodowania?",
-    description: "Załóż konto w kilka sekund i zacznij realizować plan nauki ułożony specjalnie dla Ciebie.",
+    title: "Ready to Return to Coding?",
+    description: "Create an account in seconds and start following a learning plan designed specifically for you.",
     primaryCTA: {
-      label: "Rozpocznij teraz",
+      label: "Start Now",
       href: "/auth/register",
       variant: "primary",
     },
     secondaryCTA: {
-      label: "Masz już konto?",
+      label: "Already have an account?",
       href: "/auth/login",
       variant: "ghost",
     },
   },
   legal: [
-    { label: "Polityka prywatności", href: "/legal/privacy" },
-    { label: "Regulamin", href: "/legal/terms" },
-    { label: "Bezpieczeństwo danych", href: "/legal/security" },
+    { label: "Privacy Policy", href: "/legal/privacy" },
+    { label: "Terms of Service", href: "/legal/terms" },
+    { label: "Data Security", href: "/legal/security" },
   ],
 };
 
@@ -298,7 +296,7 @@ function validateLandingContent(content: LandingContentVM): LandingContentVM {
     }
   }
 
-  content.highlights.forEach((highlight) => {
+  for (const highlight of content.highlights) {
     if (highlight.bulletPoints.length === 0 || highlight.bulletPoints.length > 4) {
       throw new Error(`Highlight ${highlight.id} must have between 1 and 4 bullet points.`);
     }
@@ -306,7 +304,7 @@ function validateLandingContent(content: LandingContentVM): LandingContentVM {
     if (!highlight.media.alt) {
       throw new Error(`Highlight ${highlight.id} media requires an alt description.`);
     }
-  });
+  }
 
   return content;
 }

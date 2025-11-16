@@ -7,8 +7,8 @@
 import type { FooterLink } from "./types";
 
 const legalLinks: FooterLink[] = [
-  { label: "Polityka prywatności", href: "/privacy" },
-  { label: "Warunki korzystania", href: "/terms" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
 ];
 
 const currentYear = new Date().getFullYear();
@@ -20,12 +20,12 @@ const currentYear = new Date().getFullYear();
       <div>
         <p class="text-sm font-semibold">Development Refresher Training</p>
         <p class="mt-2 text-sm text-muted-foreground leading-relaxed">
-          Nauka wspomagana AI dla developerów powracających na rynek
+          AI-powered learning for returning developers
         </p>
       </div>
 
       <nav aria-label="Legal links">
-        <p class="text-sm font-semibold">Regulaminy</p>
+        <p class="text-sm font-semibold">Legal</p>
         <ul class="mt-2 space-y-2" role="list">
           {
             legalLinks.map((link) => (
@@ -43,7 +43,7 @@ const currentYear = new Date().getFullYear();
       </nav>
 
       <div>
-        <p class="text-sm font-semibold">Kontakt</p>
+        <p class="text-sm font-semibold">Contact</p>
         <a
           href="mailto:support@devrefresh.app"
           class="mt-2 inline-flex items-center text-sm text-muted-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm min-h-[44px] py-2"
@@ -55,7 +55,7 @@ const currentYear = new Date().getFullYear();
     </div>
 
     <div class="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-      © {currentYear} Development Refresher Training. Wszystkie prawa zastrzeżone.
+      © {currentYear} Development Refresher Training. All rights reserved.
     </div>
   </div>
 </footer>
