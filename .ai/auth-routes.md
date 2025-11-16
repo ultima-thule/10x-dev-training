@@ -3,23 +3,26 @@
 ## Public Routes (Unauthenticated Users)
 
 ### Landing Page
+
 - **URL**: `/`
 - **File**: `src/pages/index.astro`
 - **Purpose**: Main entry point, shows hero section and benefits
 - **Links to**: `/login`, `/signup`
 
 ### Login
+
 - **URL**: `/login`
 - **File**: `src/pages/login.astro`
 - **Component**: `LoginForm.tsx`
 - **Purpose**: User authentication
 - **Fields**: Email, Password
-- **Links to**: 
+- **Links to**:
   - `/recover-password` (Forgot password)
   - `/signup` (Create account)
 - **Success**: Redirects to `/dashboard` (not yet implemented)
 
 ### Sign Up
+
 - **URL**: `/signup`
 - **File**: `src/pages/signup.astro`
 - **Component**: `SignupForm.tsx`
@@ -29,6 +32,7 @@
 - **Success**: Redirects to `/profile/setup`
 
 ### Recover Password
+
 - **URL**: `/recover-password`
 - **File**: `src/pages/recover-password.astro`
 - **Component**: `RecoverPasswordForm.tsx`
@@ -38,6 +42,7 @@
 - **Success**: Shows confirmation message, sends email with reset link
 
 ### Reset Password
+
 - **URL**: `/reset-password`
 - **File**: `src/pages/reset-password.astro`
 - **Component**: `ResetPasswordForm.tsx`
@@ -47,11 +52,12 @@
 - **Success**: Redirects to `/login`
 
 ### Profile Setup
+
 - **URL**: `/profile/setup`
 - **File**: `src/pages/profile/setup.astro`
 - **Component**: `ProfileSetupForm.tsx`
 - **Purpose**: Initial profile configuration for new users
-- **Fields**: 
+- **Fields**:
   - Experience Level (Beginner/Intermediate/Advanced/Expert)
   - Time Away from Coding (< 1yr, 1-2yrs, 3-5yrs, > 5yrs)
 - **Success**: Redirects to `/dashboard` (not yet implemented)
@@ -59,6 +65,7 @@
 ## Authentication Flow Diagrams
 
 ### Registration Flow
+
 ```
 1. User visits /signup
 2. Fills out registration form
@@ -69,6 +76,7 @@
 ```
 
 ### Login Flow
+
 ```
 1. User visits /login
 2. Enters credentials
@@ -79,6 +87,7 @@
 ```
 
 ### Password Recovery Flow
+
 ```
 1. User visits /recover-password
 2. Enters email address
@@ -107,22 +116,26 @@ http://localhost:3000/profile/setup
 ## Form Validation Rules
 
 ### Email Validation
+
 - Required field
 - Must contain "@" symbol
 - Case insensitive
 
 ### Password Validation
+
 - Required field
 - Minimum 6 characters
 - Must match confirmation (signup/reset)
 
 ### Profile Setup Validation
+
 - Experience level: Required selection
 - Time away: Required selection
 
 ## Accessibility Testing
 
 All forms support:
+
 - ✅ Keyboard navigation (Tab, Shift+Tab, Enter)
 - ✅ Screen reader announcements (ARIA live regions)
 - ✅ Focus visible indicators
@@ -133,6 +146,7 @@ All forms support:
 ## Browser Compatibility
 
 Tested and working on:
+
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Mobile responsive design
 - Dark/Light theme support
@@ -161,4 +175,3 @@ Tested and working on:
 ## Next Implementation Steps
 
 See `auth-ui-implementation.md` for detailed next steps.
-

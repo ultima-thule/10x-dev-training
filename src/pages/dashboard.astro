@@ -1,0 +1,80 @@
+---
+/**
+ * Dashboard Page
+ * Protected page for authenticated users
+ * Main landing area after login (auth-spec.md Section 2.1)
+ *
+ * @implements US-002: User Login (redirect target)
+ * @implements US-010: View Personal Progress Dashboard
+ */
+import Layout from "@/layouts/Layout.astro";
+
+// This page is protected by middleware
+// If user is not authenticated, they will be redirected to /login
+// If profile is not complete, they will be redirected to /profile/setup
+const { user } = Astro.locals;
+
+// Safety check (should never happen due to middleware)
+if (!user) {
+  return Astro.redirect("/login");
+}
+---
+
+<Layout title="Dashboard - Development Refresher Training" description="Your personalized learning dashboard">
+  <main id="main-content" role="main" class="min-h-screen bg-gradient-to-b from-background to-background/95">
+    <div class="container mx-auto px-4 py-8">
+      <header class="mb-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Welcome back!</h1>
+            <p class="mt-2 text-lg text-muted-foreground">
+              {user.email}
+            </p>
+          </div>
+          <form action="/api/auth/logout" method="POST">
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground shadow hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              Logout
+            </button>
+          </form>
+        </div>
+      </header>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h2 class="text-lg font-semibold text-foreground">Topics Completed</h2>
+          <p class="mt-2 text-3xl font-bold text-primary">0</p>
+          <p class="mt-1 text-sm text-muted-foreground">Keep learning!</p>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h2 class="text-lg font-semibold text-foreground">Topics in Progress</h2>
+          <p class="mt-2 text-3xl font-bold text-primary">0</p>
+          <p class="mt-1 text-sm text-muted-foreground">Start your journey</p>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+          <h2 class="text-lg font-semibold text-foreground">Activity Streak</h2>
+          <p class="mt-2 text-3xl font-bold text-primary">0 days</p>
+          <p class="mt-1 text-sm text-muted-foreground">Login daily to build your streak</p>
+        </div>
+      </div>
+
+      <div class="mt-8 rounded-lg border border-border bg-card p-8 shadow-sm">
+        <h2 class="text-xl font-semibold text-foreground">Get Started</h2>
+        <p class="mt-2 text-muted-foreground">
+          Ready to refresh your skills? Generate your first set of review topics to begin your learning journey.
+        </p>
+        <div class="mt-6 flex gap-4">
+          <button
+            class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            Generate Topics
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

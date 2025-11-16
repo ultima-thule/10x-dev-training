@@ -19,5 +19,9 @@ interface ImportMeta {
 declare namespace App {
   interface Locals {
     supabase: import("@supabase/ssr").SupabaseClient<import("./db/database.types").Database>;
+    user: {
+      id: string;
+      email: string;
+    } | null;
   }
 }

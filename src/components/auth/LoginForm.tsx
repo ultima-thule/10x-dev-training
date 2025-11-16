@@ -31,12 +31,33 @@ export function LoginForm() {
 
     setIsLoading(true);
 
-    // TODO: Backend integration will be added in next steps
-    // For now, just simulate a delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Call login API endpoint
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setIsLoading(false);
-    setError("Backend integration pending");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle error response
+        setError(data.error || "An error occurred during login");
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful login - redirect to dashboard
+      // Middleware will check profile_completed and redirect to /profile/setup if needed
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (

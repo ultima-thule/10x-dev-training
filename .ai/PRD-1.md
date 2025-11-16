@@ -1914,13 +1914,13 @@ SUPABASE_SERVICE_ROLE_KEY=[service-role-secret-key]
 
 ## 25. Approval and Sign-off
 
-**Product Manager:** ********\_******** Date: **\_\_\_**
+**Product Manager:** **\*\*\*\***\_**\*\*\*\*** Date: **\_\_\_**
 
-**Engineering Lead:** ********\_******** Date: **\_\_\_**
+**Engineering Lead:** **\*\*\*\***\_**\*\*\*\*** Date: **\_\_\_**
 
-**Design Lead:** ********\_******** Date: **\_\_\_**
+**Design Lead:** **\*\*\*\***\_**\*\*\*\*** Date: **\_\_\_**
 
-**Stakeholder:** ********\_******** Date: **\_\_\_**
+**Stakeholder:** **\*\*\*\***\_**\*\*\*\*** Date: **\_\_\_**
 
 ---
 
