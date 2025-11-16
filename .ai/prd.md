@@ -65,6 +65,7 @@ Former developers who have been away from programming for several years often fa
   - The form must require a valid email and a password.
   - Upon successful registration, I am automatically logged in and redirected to the dashboard.
   - The system uses Supabase authentication for account creation.
+  - This functionality is available without logging to the system (US-002).
 
 - ID: US-002
 - Title: User Login
@@ -80,6 +81,7 @@ Former developers who have been away from programming for several years often fa
 - Acceptance Criteria:
   - Given I am logged in, I can find and click a "Logout" button.
   - Upon clicking "Logout", my session is terminated and I am redirected to the public landing page.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 - ID: US-004
 - Title: Initial User Profile Setup
@@ -89,6 +91,17 @@ Former developers who have been away from programming for several years often fa
   - I can select my prior experience level from a predefined list (e.g., Junior, Mid, Senior).
   - I can input the number of years I have been away from a developer role.
   - After saving my profile, I am taken to the main dashboard.
+  - This functionality is not available if user is not logged into the system (US-002).
+
+- ID: US-004.1
+- Title: Password Recovery
+- Description: As a user who already has an account, I want to recover my forgotten password to my account.
+- Acceptance Criteria:
+  - Given I am on the login page, I can find and click "Recover password" button.
+  - Upon clicking "Recover password", use is redirected to a separate page, where he enters an email and clicks button "Recover".
+  - Upon clicking "Recover", an email with link to password reset is sent, if it was found in the users database.
+  - If email has not been found, an error message is displayed.
+  - This functionality is available without logging to the system (US-002).
 
 ### Topic Generation and Management
 
@@ -99,6 +112,7 @@ Former developers who have been away from programming for several years often fa
   - Given I am on my dashboard, I can select a technology from a curated, auto-completing list.
   - After selecting a technology and clicking "Generate", the application displays a list of AI-generated topics.
   - The topics are based on the selected technology and my user profile.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 - ID: US-006
 - Title: View Hierarchical Topics
@@ -107,6 +121,7 @@ Former developers who have been away from programming for several years often fa
   - Given a list of generated topics is displayed, parent topics are shown at the top level.
   - I can click on a parent topic to expand it and view its children sub-topics.
   - The visual nesting clearly indicates the parent-child relationship.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 - ID: US-007
 - Title: Delete a Review Topic
@@ -115,6 +130,7 @@ Former developers who have been away from programming for several years often fa
   - Given I am viewing my list of topics, each topic has a "Delete" option.
   - When I click "Delete", a confirmation prompt appears to prevent accidental deletion.
   - Upon confirmation, the topic and all its sub-topics are permanently removed from my list.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 ### Progress Tracking
 
@@ -125,6 +141,7 @@ Former developers who have been away from programming for several years often fa
   - Given I am viewing a topic, I can change its status.
   - The available statuses are 'To Do', 'In Progress', and 'Completed'.
   - Changing the status is saved automatically and the UI updates to reflect the new status (e.g., with a different color or icon).
+  - This functionality is not available if user is not logged into the system (US-002).
 
 ### LeetCode Integration
 
@@ -135,6 +152,7 @@ Former developers who have been away from programming for several years often fa
   - Given I am viewing the details of a topic, a section with "Practice Problems" is visible.
   - This section contains one or more hyperlinks to specific problems on the LeetCode website.
   - Clicking a link opens the corresponding LeetCode problem in a new browser tab.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 ### Dashboard and Gamification
 
@@ -145,6 +163,7 @@ Former developers who have been away from programming for several years often fa
   - Given I am logged in, the main page is my dashboard.
   - The dashboard displays key metrics like "Topics Completed", "Topics in Progress", and my current activity streak.
   - The data on the dashboard updates in real-time as I update topic statuses.
+  - This functionality is not available if user is not logged into the system (US-002).
 
 ## 6. Success Metrics
 
