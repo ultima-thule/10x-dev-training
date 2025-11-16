@@ -1,0 +1,25 @@
+---
+/**
+ * Topics List Page
+ * Protected route - requires authentication
+ * Displays all user topics in a hierarchical structure grouped by technology
+ */
+import Layout from "@/layouts/Layout.astro";
+import TopicsView from "@/components/topics/TopicsView";
+
+// Check authentication
+const { supabase } = Astro.locals;
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+
+if (!session) {
+  return Astro.redirect("/login");
+}
+---
+
+<Layout title="My Topics - 10x Dev Training" description="Manage your learning topics and track your progress">
+  <main id="main-content" class="container min-h-screen px-4 py-8">
+    <TopicsView client:load />
+  </main>
+</Layout>
