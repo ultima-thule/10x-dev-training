@@ -1,7 +1,8 @@
 ---
 /**
  * Landing Page
- * Public-facing entry point for unauthenticated users
+ * Public-facing entry point with context-aware header
+ * Shows different actions based on authentication state
  * Implements Server-Side Rendering and Progressive Enhancement (ui-plan.md Section 1)
  */
 import Layout from "@/layouts/Layout.astro";
@@ -12,13 +13,16 @@ import Footer from "@/components/landing/Footer.astro";
 import { getLandingContent } from "@/types/ui/landing";
 
 const landingContent = getLandingContent();
+
+// Get user state from middleware
+const { user } = Astro.locals;
 ---
 
 <Layout
   title="Development Refresher Training - AI-Powered Learning for Returning Developers"
   description="Refresh your coding skills with personalized AI-generated learning paths, progress tracking, and LeetCode integration."
 >
-  <PublicHeader header={landingContent.header} />
+  <PublicHeader header={landingContent.header} user={user} />
 
   <main id="main-content" role="main">
     <HeroSection content={landingContent.hero} />

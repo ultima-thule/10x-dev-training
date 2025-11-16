@@ -3,22 +3,30 @@
  * Profile Setup Page
  * Initial profile configuration for new users
  * Accessed after successful registration (auth-spec.md Section 2.1)
+ *
+ * @implements US-004: Initial User Profile Setup
+ *
+ * Note: This page is protected but exempted from profile completion check
+ * Users are redirected here after signup or when profile is incomplete
  */
 import Layout from "@/layouts/Layout.astro";
-import PublicHeader from "@/components/landing/PublicHeader.astro";
-import Footer from "@/components/landing/Footer.astro";
 import { ProfileSetupForm } from "@/components/auth/ProfileSetupForm";
-import { getLandingContent } from "@/types/ui/landing";
 
-const landingContent = getLandingContent();
+// This page is protected by middleware
+// If user is not authenticated, they will be redirected to /login
+const { user } = Astro.locals;
+
+// Safety check (should never happen due to middleware)
+if (!user) {
+  return Astro.redirect("/login");
+}
 ---
 
 <Layout
   title="Complete Your Profile - Development Refresher Training"
   description="Tell us about your background to personalize your learning experience"
+  showAuthHeader={true}
 >
-  <PublicHeader header={landingContent.header} />
-
   <main id="main-content" role="main" class="min-h-[calc(100vh-4rem)]">
     <section
       class="relative overflow-hidden bg-gradient-to-b from-background via-background to-background/90 py-16 sm:py-20 lg:py-24"
@@ -77,6 +85,4 @@ const landingContent = getLandingContent();
       </div>
     </section>
   </main>
-
-  <Footer />
 </Layout>

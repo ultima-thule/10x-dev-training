@@ -11,9 +11,10 @@ import ThemeToggle from "./ThemeToggle";
 interface MobileMenuProps {
   header: HeaderContent;
   themePreference?: ThemePreference;
+  user?: { id: string; email: string } | null;
 }
 
-export default function MobileMenu({ header, themePreference = "light" }: MobileMenuProps) {
+export default function MobileMenu({ header, themePreference = "light", user = null }: MobileMenuProps) {
   const { isOpen, toggle, close } = useMobileMenu();
   const dialogId = useId();
 
@@ -106,28 +107,60 @@ export default function MobileMenu({ header, themePreference = "light" }: Mobile
             </ul>
           </nav>
 
-          <div className="flex flex-col gap-3">
-            <a
-              href={header.secondaryCTA.href}
-              aria-label={header.secondaryCTA.ariaLabel ?? header.secondaryCTA.label}
-              className={getCtaButtonClasses(header.secondaryCTA.variant, "default", "justify-center")}
-              onClick={close}
-            >
-              {header.secondaryCTA.label}
-            </a>
-            <a
-              href={header.primaryCTA.href}
-              aria-label={header.primaryCTA.ariaLabel ?? header.primaryCTA.label}
-              className={getCtaButtonClasses(
-                header.primaryCTA.variant,
-                "default",
-                "w-full justify-center font-semibold"
-              )}
-              onClick={close}
-            >
-              {header.primaryCTA.label}
-            </a>
-          </div>
+          {user ? (
+            <div className="flex flex-col gap-3">
+              <div className="rounded-md border border-border bg-card p-3">
+                <p className="text-xs text-muted-foreground">Logged in as</p>
+                <p className="text-sm font-medium text-foreground">{user.email}</p>
+              </div>
+              <a
+                href="/dashboard"
+                aria-label="Go to dashboard"
+                className={getCtaButtonClasses("primary", "default", "w-full justify-center font-semibold")}
+                onClick={close}
+              >
+                Go to Dashboard
+              </a>
+              <form
+                action="/api/auth/logout"
+                method="POST"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  close();
+                  fetch("/api/auth/logout", { method: "POST" }).then(() => {
+                    globalThis.location.href = "/";
+                  });
+                }}
+              >
+                <Button type="submit" variant="ghost" className="w-full justify-center">
+                  Log out
+                </Button>
+              </form>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <a
+                href={header.secondaryCTA.href}
+                aria-label={header.secondaryCTA.ariaLabel ?? header.secondaryCTA.label}
+                className={getCtaButtonClasses(header.secondaryCTA.variant, "default", "justify-center")}
+                onClick={close}
+              >
+                {header.secondaryCTA.label}
+              </a>
+              <a
+                href={header.primaryCTA.href}
+                aria-label={header.primaryCTA.ariaLabel ?? header.primaryCTA.label}
+                className={getCtaButtonClasses(
+                  header.primaryCTA.variant,
+                  "default",
+                  "w-full justify-center font-semibold"
+                )}
+                onClick={close}
+              >
+                {header.primaryCTA.label}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </>

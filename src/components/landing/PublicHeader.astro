@@ -1,15 +1,17 @@
 ---
 import MobileMenu from "@/components/landing/MobileMenu";
 import ThemeToggle from "@/components/landing/ThemeToggle";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { getCtaButtonClasses } from "@/components/landing/cta";
 import type { HeaderContent, ThemePreference } from "@/types/ui/landing";
 
 interface Props {
   header: HeaderContent;
   themePreference?: ThemePreference;
+  user?: { id: string; email: string } | null;
 }
 
-const { header, themePreference = "light" }: Props = Astro.props;
+const { header, themePreference = "light", user = null }: Props = Astro.props;
 ---
 
 <header
@@ -48,24 +50,44 @@ const { header, themePreference = "light" }: Props = Astro.props;
 
     <div class="hidden items-center gap-3 lg:flex">
       <ThemeToggle client:idle initialTheme={themePreference} />
-      <a
-        href={header.secondaryCTA.href}
-        aria-label={header.secondaryCTA.ariaLabel ?? header.secondaryCTA.label}
-        class={getCtaButtonClasses(header.secondaryCTA.variant, "sm", "min-h-[40px] px-4")}
-      >
-        {header.secondaryCTA.label}
-      </a>
-      <a
-        href={header.primaryCTA.href}
-        aria-label={header.primaryCTA.ariaLabel ?? header.primaryCTA.label}
-        class={getCtaButtonClasses(header.primaryCTA.variant, "sm", "min-h-[40px] px-4 font-semibold")}
-      >
-        {header.primaryCTA.label}
-      </a>
+      {
+        user ? (
+          <>
+            <span class="text-sm text-muted-foreground" aria-label={`Logged in as ${user.email}`}>
+              {user.email}
+            </span>
+            <a
+              href="/dashboard"
+              aria-label="Go to dashboard"
+              class={getCtaButtonClasses("secondary", "sm", "min-h-[40px] px-4")}
+            >
+              Dashboard
+            </a>
+            <LogoutButton client:load />
+          </>
+        ) : (
+          <>
+            <a
+              href={header.secondaryCTA.href}
+              aria-label={header.secondaryCTA.ariaLabel ?? header.secondaryCTA.label}
+              class={getCtaButtonClasses(header.secondaryCTA.variant, "sm", "min-h-[40px] px-4")}
+            >
+              {header.secondaryCTA.label}
+            </a>
+            <a
+              href={header.primaryCTA.href}
+              aria-label={header.primaryCTA.ariaLabel ?? header.primaryCTA.label}
+              class={getCtaButtonClasses(header.primaryCTA.variant, "sm", "min-h-[40px] px-4 font-semibold")}
+            >
+              {header.primaryCTA.label}
+            </a>
+          </>
+        )
+      }
     </div>
 
     <div class="flex flex-1 items-center justify-end lg:hidden">
-      <MobileMenu client:idle header={header} themePreference={themePreference} />
+      <MobileMenu client:idle header={header} themePreference={themePreference} user={user} />
     </div>
   </div>
 </header>

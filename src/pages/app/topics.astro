@@ -3,22 +3,30 @@
  * Topics List Page
  * Protected route - requires authentication
  * Displays all user topics in a hierarchical structure grouped by technology
+ *
+ * @implements US-005: Generate Review Topics
+ * @implements US-006: View Hierarchical Topics
+ * @implements US-007: Delete a Review Topic
+ * @implements US-008: Update Topic Status
  */
 import Layout from "@/layouts/Layout.astro";
 import TopicsView from "@/components/topics/TopicsView";
 
-// Check authentication
-const { supabase } = Astro.locals;
-const {
-  data: { session },
-} = await supabase.auth.getSession();
+// This page is protected by middleware
+// If user is not authenticated, they will be redirected to /login
+const { user } = Astro.locals;
 
-if (!session) {
+// Safety check (should never happen due to middleware)
+if (!user) {
   return Astro.redirect("/login");
 }
 ---
 
-<Layout title="My Topics - 10x Dev Training" description="Manage your learning topics and track your progress">
+<Layout
+  title="My Topics - Development Refresher Training"
+  description="Manage your learning topics and track your progress"
+  showAuthHeader={true}
+>
   <main id="main-content" class="container min-h-screen px-4 py-8">
     <TopicsView client:load />
   </main>

@@ -26,7 +26,7 @@ const PUBLIC_PATHS = [
  * Protected paths that require authentication
  * Users must be logged in to access these routes
  */
-const PROTECTED_PATHS = ["/dashboard", "/profile", "/api/profile", "/api/topics"];
+const PROTECTED_PATHS = ["/dashboard", "/app", "/profile", "/api/profile", "/api/topics"];
 
 const parseRequestCookies = (headerValue: string | null) => {
   if (!headerValue) {
@@ -106,10 +106,10 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, request, url
   } = await locals.supabase.auth.getUser();
 
   // Set user in locals (null if not authenticated)
-  locals.user = user
+  locals.user = user?.email
     ? {
         id: user.id,
-        email: user.email!,
+        email: user.email,
       }
     : null;
 

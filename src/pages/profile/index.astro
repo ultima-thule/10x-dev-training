@@ -1,0 +1,168 @@
+---
+/**
+ * User Profile Page
+ * Protected route for viewing and managing user profile
+ *
+ * Features:
+ * - View current profile information
+ * - Edit profile settings (experience level, years away)
+ * - Account management links
+ */
+import Layout from "@/layouts/Layout.astro";
+
+// This page is protected by middleware
+// If user is not authenticated, they will be redirected to /login
+// If profile is not complete, they will be redirected to /profile/setup
+const { user, supabase } = Astro.locals;
+
+// Safety check (should never happen due to middleware)
+if (!user) {
+  return Astro.redirect("/login");
+}
+
+// Fetch user profile
+const { data: profile, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+
+if (error || !profile) {
+  // If no profile exists, redirect to setup
+  return Astro.redirect("/profile/setup");
+}
+---
+
+<Layout
+  title="Profile Settings - Development Refresher Training"
+  description="View and manage your profile settings"
+  showAuthHeader={true}
+>
+  <main id="main-content" role="main" class="min-h-screen bg-gradient-to-b from-background to-background/95">
+    <div class="container mx-auto px-4 py-8">
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Profile Settings</h1>
+        <p class="mt-2 text-lg text-muted-foreground">Manage your account and preferences</p>
+      </header>
+
+      <div class="grid gap-6 lg:grid-cols-3">
+        <!-- Profile Information -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Account Information -->
+          <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <h2 class="mb-4 text-xl font-semibold text-foreground">Account Information</h2>
+            <div class="space-y-4">
+              <div>
+                <label class="text-sm font-medium text-muted-foreground">Email</label>
+                <p class="mt-1 text-base text-foreground">{user.email}</p>
+              </div>
+              <div>
+                <label class="text-sm font-medium text-muted-foreground">User ID</label>
+                <p class="mt-1 font-mono text-sm text-muted-foreground">{user.id}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Learning Profile -->
+          <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <div class="mb-4 flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-foreground">Learning Profile</h2>
+              <a
+                href="/profile/setup"
+                class="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-sm"
+              >
+                Edit Profile
+              </a>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="text-sm font-medium text-muted-foreground">Experience Level</label>
+                <p class="mt-1 text-base capitalize text-foreground">{profile.experience_level}</p>
+              </div>
+              <div>
+                <label class="text-sm font-medium text-muted-foreground">Years Away from Coding</label>
+                <p class="mt-1 text-base text-foreground">
+                  {profile.years_away}
+                  {profile.years_away === 1 ? "year" : "years"}
+                </p>
+              </div>
+              <div>
+                <label class="text-sm font-medium text-muted-foreground">Activity Streak</label>
+                <p class="mt-1 text-base text-foreground">
+                  {profile.activity_streak}
+                  {profile.activity_streak === 1 ? "day" : "days"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Actions -->
+          <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <h2 class="mb-4 text-xl font-semibold text-foreground">Account Actions</h2>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between rounded-md border border-border p-4">
+                <div>
+                  <h3 class="font-medium text-foreground">Change Password</h3>
+                  <p class="text-sm text-muted-foreground">Update your account password</p>
+                </div>
+                <a
+                  href="/reset-password"
+                  class="inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  Change
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="space-y-6">
+          <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <h2 class="mb-4 text-lg font-semibold text-foreground">Quick Stats</h2>
+            <div class="space-y-4">
+              <div>
+                <p class="text-sm text-muted-foreground">Member Since</p>
+                <p class="mt-1 text-base font-medium text-foreground">
+                  {
+                    new Date(profile.created_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  }
+                </p>
+              </div>
+              <div>
+                <p class="text-sm text-muted-foreground">Profile Updated</p>
+                <p class="mt-1 text-base font-medium text-foreground">
+                  {
+                    new Date(profile.updated_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <h2 class="mb-4 text-lg font-semibold text-foreground">Quick Actions</h2>
+            <div class="flex flex-col gap-3">
+              <a
+                href="/dashboard"
+                class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                Go to Dashboard
+              </a>
+              <a
+                href="/app/topics"
+                class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                View Topics
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
