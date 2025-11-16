@@ -1,29 +1,101 @@
 ---
-/**
- * HeroSection Component
- * Main hero section with headline, subheadline, and CTA buttons
- * Implements progressive enhancement and accessibility standards (ui-plan.md Section 7.1)
- */
-import { Button } from "@/components/ui/button";
+import { getCtaButtonClasses } from "@/components/landing/cta";
+import type { HeroContent } from "@/types/ui/landing";
+
+interface Props {
+  content: HeroContent;
+}
+
+const { content }: Props = Astro.props;
 ---
 
 <section
-  class="container flex min-h-[600px] flex-col items-center justify-center px-4 py-12 text-center sm:px-6 lg:px-8"
+  id="hero"
+  role="banner"
   aria-labelledby="hero-heading"
+  class="relative overflow-hidden bg-gradient-to-b from-background via-background to-background/90 py-16 sm:py-20 lg:py-24"
 >
-  <h1 id="hero-heading" class="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-    Refresh Your Coding Skills
-  </h1>
-  <p class="mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-    AI-powered learning paths designed for developers returning to the field. Get personalized topics, track progress,
-    and practice with LeetCode.
-  </p>
-  <div class="flex flex-col gap-4 sm:flex-row" role="group" aria-label="Call to action buttons">
-    <Button size="lg" asChild class="min-h-[44px]">
-      <a href="/signup" aria-label="Get started with a free account">Get Started Free</a>
-    </Button>
-    <Button size="lg" variant="outline" asChild class="min-h-[44px]">
-      <a href="/login" aria-label="Sign in to your account">Sign In</a>
-    </Button>
+  <div class="absolute inset-0 -z-10">
+    <div
+      class="pointer-events-none absolute left-1/2 top-0 size-[480px] -translate-x-1/2 rounded-full bg-primary/20 blur-[160px] sm:size-[640px]"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute bottom-0 right-0 size-[320px] rounded-full bg-indigo-500/10 blur-[120px]"
+      aria-hidden="true"
+    >
+    </div>
+  </div>
+
+  <div class="container grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+    <div class="space-y-8 text-center lg:text-left">
+      {
+        content.eyebrow && (
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary/90">{content.eyebrow}</p>
+        )
+      }
+      <div class="space-y-4">
+        <h1 id="hero-heading" class="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          {content.title}
+        </h1>
+        <p class="text-lg text-muted-foreground sm:text-xl">{content.subtitle}</p>
+      </div>
+
+      <ul class="space-y-3 text-left text-base text-muted-foreground sm:text-lg" role="list">
+        {
+          content.bulletPoints.map((point) => {
+            return (
+              <li class="flex items-start gap-3">
+                <span
+                  aria-hidden="true"
+                  class="mt-1 inline-flex size-5 items-center justify-center rounded-full bg-primary/10 text-primary"
+                >
+                  ✓
+                </span>
+                <span>{point}</span>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <div class="flex flex-col gap-4 sm:flex-row sm:justify-start" role="group" aria-label="Główne działania">
+        <a
+          href={content.primaryCTA.href}
+          aria-label={content.primaryCTA.ariaLabel ?? content.primaryCTA.label}
+          class={getCtaButtonClasses(content.primaryCTA.variant, "lg", "w-full justify-center sm:w-auto sm:px-8")}
+        >
+          {content.primaryCTA.label}
+        </a>
+        <a
+          href={content.secondaryCTA.href}
+          aria-label={content.secondaryCTA.ariaLabel ?? content.secondaryCTA.label}
+          class={getCtaButtonClasses(content.secondaryCTA.variant, "lg", "w-full justify-center sm:w-auto sm:px-8")}
+        >
+          {content.secondaryCTA.label}
+        </a>
+      </div>
+    </div>
+
+    <div class="relative flex justify-center">
+      <div
+        class="pointer-events-none absolute -inset-6 rounded-[32px] border border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-indigo-500/10 blur-2xl"
+        aria-hidden="true"
+      >
+      </div>
+      <picture class="relative block overflow-hidden rounded-[32px] border border-border/60 shadow-2xl">
+        <img
+          src={content.image.src}
+          alt={content.image.alt}
+          width={content.image.width}
+          height={content.image.height}
+          loading="lazy"
+          decoding="async"
+          sizes={content.image.sizes}
+          class="h-auto w-full bg-background object-cover"
+        />
+      </picture>
+    </div>
   </div>
 </section>

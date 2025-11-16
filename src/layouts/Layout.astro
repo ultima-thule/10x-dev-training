@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import type { ThemeBootstrapScriptConfig } from "@/types/ui/landing";
 
 interface Props {
   title?: string;
@@ -7,6 +8,81 @@ interface Props {
 }
 
 const { title = "10x Dev Training", description = "AI-powered learning for returning developers" } = Astro.props;
+
+const themeConfig: ThemeBootstrapScriptConfig = {
+  storageKey: "drt:theme",
+  defaultTheme: "light",
+};
+
+const themeBootstrapScript = `(function () {
+  const storageKey = "${themeConfig.storageKey}";
+  const defaultTheme = "${themeConfig.defaultTheme}";
+  const classList = document.documentElement.classList;
+
+  const normalize = (value) => (value === "dark" ? "dark" : value === "light" ? "light" : undefined);
+
+  const getStoredPreference = () => {
+    try {
+      return normalize(window.localStorage.getItem(storageKey));
+    } catch {
+      return undefined;
+    }
+  };
+
+  const getSystemPreference = () => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return defaultTheme;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+
+  const applyTheme = (value) => {
+    const next = normalize(value);
+    classList.remove("light", "dark");
+    classList.add(next);
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next;
+    return next;
+  };
+
+  const setPreferredTheme = (value, persist = true) => {
+    const next = applyTheme(normalize(value) ?? defaultTheme);
+    if (persist) {
+      try {
+        window.localStorage.setItem(storageKey, next);
+      } catch {
+        /* no-op */
+      }
+    }
+    return next;
+  };
+
+  const stored = getStoredPreference();
+  const initial = stored ?? getSystemPreference();
+  applyTheme(initial);
+
+  window.__applyTheme = (value) => applyTheme(normalize(value) ?? defaultTheme);
+  window.__setPreferredTheme = (value) => setPreferredTheme(value, true);
+
+  if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    try {
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = (event) => {
+        const hasExplicitPreference = !!getStoredPreference();
+        if (!hasExplicitPreference) {
+          applyTheme(event.matches ? "dark" : "light");
+        }
+      };
+      if (typeof media.addEventListener === "function") {
+        media.addEventListener("change", handleChange);
+      } else if (typeof media.addListener === "function") {
+        media.addListener(handleChange);
+      }
+    } catch {
+      /* no-op */
+    }
+  }
+})();`;
 ---
 
 <!doctype html>
@@ -14,12 +90,13 @@ const { title = "10x Dev Training", description = "AI-powered learning for retur
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script is:inline data-theme-bootstrap set:html={themeBootstrapScript} />
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="min-h-screen bg-background font-sans text-foreground antialiased">
     <!-- Skip to main content link for keyboard navigation (WCAG AA) -->
     <a
       href="#main-content"

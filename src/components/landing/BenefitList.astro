@@ -1,0 +1,61 @@
+---
+import type { BenefitItem } from "@/types/ui/landing";
+
+interface Props {
+  items: BenefitItem[];
+}
+
+const { items }: Props = Astro.props;
+
+if (!Array.isArray(items) || items.length < 4) {
+  throw new Error("BenefitList requires at least four benefit items.");
+}
+
+const iconGlyphs: Record<string, string> = {
+  sparkles: "✨",
+  layers: "🧩",
+  status: "📈",
+  leetcode: "💻",
+  dashboard: "📊",
+  fire: "🔥",
+};
+
+const getIconGlyph = (key?: string) => iconGlyphs[key ?? ""] ?? "•";
+---
+
+<section
+  id="benefits"
+  class="container space-y-10 px-4 py-16 sm:py-20 lg:space-y-16 lg:py-24"
+  aria-labelledby="benefits-heading"
+>
+  <div class="mx-auto max-w-2xl text-center space-y-4">
+    <p class="text-sm font-semibold uppercase tracking-[0.3em] text-primary/80">Najważniejsze korzyści</p>
+    <h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+      Dlaczego developerzy wracający do branży wybierają DRT
+    </h2>
+  </div>
+
+  <ul role="list" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      items.map((item) => {
+        return (
+          <li
+            data-id={item.id}
+            class="group flex flex-col rounded-2xl border border-border/70 bg-card/70 p-6 shadow-sm transition hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg focus-within:-translate-y-1 focus-within:border-primary/50"
+          >
+            <span
+              class="mb-5 inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl"
+              aria-hidden="true"
+            >
+              {getIconGlyph(item.icon)}
+            </span>
+            <div class="space-y-3">
+              <h3 class="text-xl font-semibold text-foreground">{item.title}</h3>
+              <p class="text-base text-muted-foreground">{item.description}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
