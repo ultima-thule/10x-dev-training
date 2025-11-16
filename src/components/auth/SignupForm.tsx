@@ -9,16 +9,19 @@ export function SignupForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const emailId = useId();
   const passwordId = useId();
   const confirmPasswordId = useId();
   const errorId = useId();
+  const successId = useId();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     // Client-side validation
     if (!email || !password || !confirmPassword) {
@@ -43,12 +46,47 @@ export function SignupForm() {
 
     setIsLoading(true);
 
-    // TODO: Backend integration will be added in next steps
-    // For now, just simulate a delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Call signup API endpoint
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setIsLoading(false);
-    setError("Backend integration pending");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle error response
+        setError(data.error || "An error occurred during signup");
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful signup
+      if (data.requiresEmailConfirmation) {
+        // Show success message about email confirmation
+        setSuccess(
+          "Account created successfully! Please check your email and click the confirmation link to activate your account. You can then sign in."
+        );
+        // Clear form fields
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+      } else {
+        // If no email confirmation is required, redirect to dashboard
+        // This case is rare but can happen if email confirmation is disabled in Supabase settings
+        globalThis.location.href = "/dashboard";
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Signup error:", error);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,6 +94,16 @@ export function SignupForm() {
       {error && (
         <Alert variant="destructive" id={errorId} aria-live="polite">
           <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert
+          id={successId}
+          aria-live="polite"
+          className="border-green-500/50 bg-green-50 dark:bg-green-950/20 text-green-900 dark:text-green-100"
+        >
+          <AlertDescription>{success}</AlertDescription>
         </Alert>
       )}
 
